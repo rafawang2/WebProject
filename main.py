@@ -6,10 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-app.mount("/styles", StaticFiles(directory="styles"), name="styles")
-app.mount("/scripts", StaticFiles(directory="scripts"), name="scripts")
-app.mount("/images", StaticFiles(directory="images"), name="images")
-app.mount("/components", StaticFiles(directory="components"), name="components")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 

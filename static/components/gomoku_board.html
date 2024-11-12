@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe replay</title>
+    <link rel="stylesheet" href="/static/styles/ReplayBoard.css">
+    <link rel="stylesheet" href="/static/styles/navbar.css">
+</head>
+<body>
+    <div id="body-container">
+        <!-- Todo 導覽列位置 -->
+        <div id="nav"></div>
+        <p id="testOutput">test</p>
+        <p id="board_test">board_test</p>
+        <div id="game">
+            <canvas id="board"></canvas>
+            <div class="button-container">
+                <img src="/static/images/left-arrow.png" alt="left-arrow" id="left-arrow"/>
+                <img src="/static/images/right-arrow.png" alt="right-arrow" id="right-arrow"/>
+            </div>
+        </div>
+    </div>
+    <script src="/static/scripts/GomokuReplay.js"></script>
+    <script src="/static/scripts/nav.js"></script>
+</body>
+</html>

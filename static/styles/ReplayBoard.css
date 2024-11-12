@@ -1,0 +1,40 @@
+#game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px;
+    border: 2px wheat solid;
+    border-radius: 50px;
+}
+
+
+body
+{
+    color: wheat;
+    font-family: 'DFKai-SB';
+    box-sizing: border-box ;
+    margin: 0;
+    padding: 0;
+    background-color: #26223a;
+}
+
+.button-container {
+    display: flex; /* 使用 flex 布局讓圖標保持在同一行 */
+    justify-content: center; /* 圖標水平居中 */
+    margin-top: 25px; /* 與棋盤的間距 */
+}
+
+.button-container img {
+    width: 50px; /* 設置圖片寬度 */
+    cursor: pointer; /* 鼠標移到圖片上時變為手型 */
+    margin: 50px 50px; /* 調整左右圖片的間距 */
+    border: white 2px solid;
+    border-radius: 30px;
+    background-color: wheat;
+}
+
+
+#board {
+    background-color: 	#D26900;
+    /* margin: 25px; */
+}
