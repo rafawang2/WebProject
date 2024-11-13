@@ -96,7 +96,7 @@ testBoard.textContent = `${board}`;
 
 
 let steps = [];  // 初始時為空，之後從 JSON 載入資料
-fetch("/static/scripts/Gomoku_log/game_log.json")
+fetch("/static/Log/Gomoku_log/game_log.json")
     .then(response => response.json())
     .then(data => {
         console.log(data);  // 這裡打印整個 JSON 資料
