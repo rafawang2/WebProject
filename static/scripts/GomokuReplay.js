@@ -112,7 +112,7 @@ let currentStep = 0;
 function nextStep() {
     if (currentStep < steps.length) {
         const { x, y, player } = steps[currentStep];
-        testOutput.textContent = `steps: ${currentStep+1}/${steps.length}`
+        testOutput.textContent = `steps: (${x},${y}) ${currentStep+1}/${steps.length}`
         board[x][y] = player;
         currentStep++;
         drawBoard();
@@ -129,7 +129,7 @@ function prevStep() {
     if (currentStep > 0) {
         currentStep--;
         const { x, y } = steps[currentStep];
-        testOutput.textContent = `steps: ${currentStep+1}/${steps.length}`
+        testOutput.innerHTML = `steps: (<s>(${x},${y})</s>) ${currentStep+1}/${steps.length}`;
         board[x][y] = 0;
         drawBoard();
         testBoard.textContent = `${board}`;
