@@ -1,6 +1,7 @@
 /* ------navbar--------  */
 body
 {
+    justify-content: space-between;
     font-family: 'Microsoft Yahi';
     box-sizing: border-box ;
     margin: 0;
@@ -8,7 +9,7 @@ body
     background-color: #26223a;
 }
 
-li,a,button
+li,a
 {
     font-weight: 100;
     font-size: 25px;
@@ -23,10 +24,10 @@ header
     background-color: gray;
 }
 
-button
+a
 {
-    margin: 0px 60px 0px 10px;
-    padding: 10px 15px;
+    margin: 0px 0px 0px 0px;
+    padding: 5px 5px 5px 5px;
     background-color: rgb(2, 137, 58);
     border:none;
     border-radius: 20px;
@@ -35,8 +36,9 @@ button
     
 }
 
-button:hover
+a:hover
 {
+    cursor: pointer;
     background-color:rgb(7, 131, 158)
 }
 .logo
@@ -81,4 +83,10 @@ button:hover
 .nav_links li a:hover
 {
     cursor: pointer;
+}
+
+#user_img {
+    border: 3px solid black;
+    border-radius: 50px;
+    margin: 0px 25px 0px 25px;
 }
