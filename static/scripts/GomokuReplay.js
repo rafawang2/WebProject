@@ -3,13 +3,20 @@ const ctx = canvas.getContext("2d");
 // 假設這是遊戲的棋盤矩陣
 const board = Array.from({ length: 15 }, () => Array(15).fill(0));
 const offset = 25;   //棋盤從50,50開始繪製
-const gap = 50; // 每個格子的大小
+const gap = 30; // 每個格子的大小
 const len = gap * (board[0].length-1);
-const radius = 15
+const radius = 10
 canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
 ctx.strokeStyle = "black";  // 設置線條顏色為黑色
 ctx.lineWidth = 3;         // 設置線條寬度
+// 這裡應該是選擇所有的 img 元素
+const arrow_images = document.querySelectorAll('.button-container img');
+
+// 用來遍歷所有的圖片元素並修改其寬度
+arrow_images.forEach((img) => {
+    img.style.width = `${gap}px`; // 設置圖片的寬度
+});
 
 const testOutput = document.getElementById("testOutput"); // 獲取 p 標籤
 testOutput.textContent = ""; // 清空 p 標籤的內容0
@@ -25,7 +32,7 @@ function drawBlack(i, j) {
     var gradient = ctx.createRadialGradient(
         x, // 內圓的 x 座標
         y, // 內圓的 y 座標
-        13, // 內圓的半徑
+        radius - 2, // 內圓的半徑
         x, // 外圓的 x 座標
         y, // 外圓的 y 座標
         radius // 外圓的半徑（也就是圓的大小）
@@ -47,7 +54,7 @@ function drawWhite(i,j){
     var gradient = ctx.createRadialGradient(
         x, // 內圓的 x 座標
         y, // 內圓的 y 座標
-        13, // 內圓的半徑
+        radius - 2, // 內圓的半徑
         x, // 外圓的 x 座標
         y, // 外圓的 y 座標
         radius // 外圓的半徑（也就是圓的大小）

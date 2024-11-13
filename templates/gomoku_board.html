@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>棋局回放</title>
-    <link rel="stylesheet" href="/static/styles/ReplayBoard.css">
-    <link rel="stylesheet" href="/static/styles/navbar.css">
+    <link rel="stylesheet" href="/static/styles/ReplayBoard.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/navbar.css?v={{ time }}">
     <link rel="icon" href="/static/images/chess.png" type="image/x-icon">
 </head>
 <body>
@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-    <script src="/static/scripts/GomokuReplay.js"></script>
-    <script src="/static/scripts/nav.js"></script>
+    <script src="/static/scripts/GomokuReplay.js?v={{ time }}"></script>
+    <script src="/static/scripts/nav.js?v={{ time }}"></script>
 </body>
 </html>

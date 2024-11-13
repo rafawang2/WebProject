@@ -4,6 +4,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from datetime import datetime
+current_time = datetime.now().timestamp()
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -12,15 +14,15 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/home",response_class=HTMLResponse)
 async def homepage(request: Request):
-    return templates.TemplateResponse("Home.html",{"request": request})
+    return templates.TemplateResponse("Home.html",{"request": request , "time": current_time})
 
 @app.get("/about",response_class=HTMLResponse)
 async def aboutpage(request: Request):
-    return templates.TemplateResponse("about.html",{"request": request})
+    return templates.TemplateResponse("about.html",{"request": request , "time": current_time})
 
 @app.get("/gomoku_replay",response_class=HTMLResponse)
 async def aboutpage(request: Request):
-    return templates.TemplateResponse("gomoku_board.html",{"request": request})
+    return templates.TemplateResponse("gomoku_board.html", {"request": request, "time": current_time})
 
 
 if __name__ == "__main__":
