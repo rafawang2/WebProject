@@ -27,7 +27,6 @@ body
 }
 
 .button-container img {
-    width: 50px; /* 設置圖片寬度 */
     cursor: pointer; /* 鼠標移到圖片上時變為手型 */
     margin: 0px 25px 0px 25px; /* 調整左右圖片的間距 */
     border: white 2px solid;

@@ -1,6 +1,7 @@
 /* ------navbar--------  */
 body
 {
+    justify-content: space-between;
     font-family: 'Microsoft Yahi';
     box-sizing: border-box ;
     margin: 0;
@@ -8,7 +9,7 @@ body
     background-color: #26223a;
 }
 
-li,a,button
+li,a
 {
     font-weight: 100;
     font-size: 25px;
@@ -23,21 +24,24 @@ header
     background-color: gray;
 }
 
-button
+a
 {
-    margin: 0px 60px 0px 10px;
-    padding: 10px 15px;
-    background-color: rgb(2, 137, 58);
-    border:none;
+    padding: 5px 10px 5px 10px;
+    /* Permalink - use to edit and share this gradient. 固定鏈接 - 用於編輯和分享此漸變： https://colorzilla.com/gradient-editor/#bfd255+0,8eb92a+28,9ecb2d+100 */
+    background: linear-gradient(135deg,  rgba(191,210,85,1) 0%,rgba(142,185,42,1) 28%,rgba(158,203,45,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+
     border-radius: 20px;
     cursor:pointer;
     transition: all 0.3s ease 0s;
-    
 }
 
-button:hover
+a:hover
 {
-    background-color:rgb(7, 131, 158)
+    cursor: pointer;
+    /* Permalink - use to edit and share this gradient. 固定鏈接 - 用於編輯和分享此漸變： https://colorzilla.com/gradient-editor/#1e5799+27,2989d8+50,1e5799+95&0+0,1+5,1+5,0.8+15,1+81,0.8+97,0+100 */
+    background: linear-gradient(135deg,  rgba(30,87,153,0) 0%,rgba(30,87,153,1) 5%,rgba(30,87,153,0.8) 15%,rgba(30,87,153,0.84) 27%,rgba(41,137,216,0.91) 50%,rgba(33,103,173,1) 81%,rgba(30,87,153,0.83) 95%,rgba(30,87,153,0.8) 97%,rgba(30,87,153,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
 }
 .logo
 {
@@ -65,7 +69,6 @@ button:hover
 .nav_links
 {
     list-style: none;
-    
 }
 .nav_links li
 {
@@ -83,3 +86,8 @@ button:hover
     cursor: pointer;
 }
 
+#user_img {
+    border: 3px solid black;
+    border-radius: 50px;
+    margin: 0px 25px 0px 25px;
+}
