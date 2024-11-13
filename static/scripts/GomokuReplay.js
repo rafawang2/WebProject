@@ -8,13 +8,11 @@ const len = gap * (board[0].length-1);
 const radius = 15
 canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
-ctx.strokeStyle = "#2894FF";  // 設置線條顏色為黑色
-ctx.lineWidth = 2;         // 設置線條寬度
+ctx.strokeStyle = "black";  // 設置線條顏色為黑色
+ctx.lineWidth = 3;         // 設置線條寬度
 
 const testOutput = document.getElementById("testOutput"); // 獲取 p 標籤
-testOutput.textContent = "Yee"; // 清空 p 標籤的內容0
-
-const testBoard = document.getElementById("board_test")
+testOutput.textContent = ""; // 清空 p 標籤的內容0
 
 function drawBlack(i, j) {
     let x = offset + gap * j;
@@ -87,12 +85,12 @@ function drawBoard() {
 }
 
 const game_div = document.getElementById("game");
-game_div.style.width = (canvas.width + offset) + "px";
-game_div.style.height = (canvas.height + offset) + "px";
+// game_div.style.width = (canvas.width + offset) + "px";
+// game_div.style.height = (canvas.height + offset) + "px";
 
 // 初次加載時繪製棋盤
 drawBoard();
-testBoard.textContent = `${board}`;
+
 
 
 let steps = [];  // 初始時為空，之後從 JSON 載入資料
@@ -108,20 +106,19 @@ fetch("/static/Log/Gomoku_log/game_log.json")
     });
 
 let currentStep = 0;
+let lastPlayer = null; // 儲存最後一次的玩家
 
 function nextStep() {
     if (currentStep < steps.length) {
         const { x, y, player } = steps[currentStep];
-        testOutput.textContent = `steps: (${x},${y}) ${currentStep+1}/${steps.length}`
+        testOutput.textContent = `steps: (${x},${y}) ${currentStep+1}/${steps.length}`;
         board[x][y] = player;
+        lastPlayer = player; // 更新最後的玩家
         currentStep++;
         drawBoard();
-        testBoard.textContent = `${board}`;
     }
-    else if(currentStep == steps.length)
-    {
-        testBoard.textContent = "到底了!";
-        testOutput.textContent = "---"
+    else if (currentStep === steps.length) {
+        testOutput.textContent = `玩家${lastPlayer}勝利!`; // 使用最後的玩家
     }
 }
 
@@ -129,15 +126,14 @@ function prevStep() {
     if (currentStep > 0) {
         currentStep--;
         const { x, y } = steps[currentStep];
-        testOutput.innerHTML = `steps: (<s>(${x},${y})</s>) ${currentStep+1}/${steps.length}`;
+        testOutput.innerHTML = `steps: <s>(${x},${y})</s> ${currentStep+1}/${steps.length}`;
         board[x][y] = 0;
         drawBoard();
-        testBoard.textContent = `${board}`;
+        
     }
     else if(currentStep == 0)
     {
-        testBoard.textContent = "到底了!";
-        testOutput.textContent = "---"
+        testOutput.textContent = "到底了!"
     }
 
 }

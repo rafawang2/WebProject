@@ -1,9 +1,11 @@
 #game {
+    /* border: 2px wheat solid; */
+
     display: flex;
+    justify-self: center;
     flex-direction: column;
     align-items: center;
     padding: 25px;
-    border: 2px wheat solid;
     border-radius: 50px;
 }
 
@@ -27,7 +29,7 @@ body
 .button-container img {
     width: 50px; /* 設置圖片寬度 */
     cursor: pointer; /* 鼠標移到圖片上時變為手型 */
-    margin: 50px 50px; /* 調整左右圖片的間距 */
+    margin: 0px 25px 0px 25px; /* 調整左右圖片的間距 */
     border: white 2px solid;
     border-radius: 30px;
     background-color: wheat;
@@ -35,6 +37,6 @@ body
 
 
 #board {
-    background-color: 	#D26900;
+    background: radial-gradient(ellipse at center, rgba(255,175,75,1) 0%,rgba(255,146,10,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     /* margin: 25px; */
 }
