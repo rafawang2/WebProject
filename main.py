@@ -14,12 +14,13 @@ templates = Jinja2Templates(directory="templates")
 async def homepage(request: Request):
     return templates.TemplateResponse("Home.html",{"request": request})
 
-
 @app.get("/about",response_class=HTMLResponse)
 async def aboutpage(request: Request):
     return templates.TemplateResponse("about.html",{"request": request})
 
-
+@app.get("/gomoku_replay",response_class=HTMLResponse)
+async def aboutpage(request: Request):
+    return templates.TemplateResponse("gomoku_board.html",{"request": request})
 
 
 if __name__ == "__main__":
