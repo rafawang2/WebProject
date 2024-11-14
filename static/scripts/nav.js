@@ -4,7 +4,9 @@ async function loadHTML() {
         const response = await fetch("/static/components/nav.html"); // 請求其他 HTML 檔案
         const htmlContent = await response.text();
         document.getElementById("nav").innerHTML = htmlContent; // 將內容插入主頁面
-    } catch (error) {
+    } 
+    catch (error) 
+    {
         console.error("Error loading HTML:", error);
     }
 }

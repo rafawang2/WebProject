@@ -1,6 +1,7 @@
 import uvicorn
+from pydantic import BaseModel
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -11,6 +12,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+class BoardSelection(BaseModel):
+    BID: int
+    GID: int
 
 @app.get("/",response_class=HTMLResponse)
 async def gotohome(request: Request):
@@ -25,9 +30,35 @@ async def homepage(request: Request):
 async def aboutpage(request: Request):
     return templates.TemplateResponse("about.html",{"request": request , "time": current_time})
 
-@app.get("/gomoku_replay",response_class=HTMLResponse)
-async def aboutpage(request: Request):
-    return templates.TemplateResponse("gomoku_board.html", {"request": request, "time": current_time})
+@app.get("/SelectReplayBoard",response_class=HTMLResponse)
+async def SelectPeplay(request: Request):
+    return templates.TemplateResponse("SelectReplayBoard.html", {"request": request, "time": current_time})
+
+# 將得到的BID及GID丟到Replay.html
+replay_board_type = {"BID":0, "GID":0}
+
+def get_board_type(BID=0, GID=0):
+    replay_board_type["BID"] = BID
+    replay_board_type["GID"] = GID
+    return RedirectResponse(url="/replayBoard")
+    
+@app.post("/SelectReplayBoard",response_class=HTMLResponse)
+async def SelectReplayBoard_post(selection: BoardSelection, request: Request):
+    get_board_type(selection.BID, selection.GID)
+    return templates.TemplateResponse("SelectReplayBoard.html", {
+        "request": request,
+        "time": current_time
+    })
+    
+@app.get("/replayBoard",response_class=HTMLResponse)
+async def replayBoard(request: Request, BID = replay_board_type["BID"], GID = replay_board_type["GID"]):
+    return templates.TemplateResponse("Replay.html", {
+        "BID": BID,
+        "GID": GID,
+        "request": request,
+        "time": current_time
+    })
+
 
 
 if __name__ == "__main__":

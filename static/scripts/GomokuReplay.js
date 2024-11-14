@@ -1,3 +1,7 @@
+const BID = document.getElementById("hiddenBID").value;
+const GID = document.getElementById("hiddenGID").value;
+console.log(`${BID}, ${GID}`)
+
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 // 假設這是遊戲的棋盤矩陣
