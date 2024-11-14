@@ -152,3 +152,23 @@ document.getElementById("right-arrow").addEventListener("click", function() {
 document.getElementById("left-arrow").addEventListener("click", function() {
     prevStep();
 });
+
+let intervalId; // 用來儲存 setInterval 的返回值
+let isPlaying = false; // 用來記錄是否正在播放
+
+function startAutoExecution() {
+    if (!isPlaying) {
+        intervalId = setInterval(nextStep, 100); // 開始自動播放
+        document.getElementById("auto_replay").src = "/static/images/video-pause-button.png"; // 切換為暫停圖片
+        isPlaying = true;
+    } else {
+        clearInterval(intervalId); // 暫停自動播放
+        document.getElementById("auto_replay").src = "/static/images/play.png"; // 切換回播放圖片
+        isPlaying = false;
+    }
+}
+
+// 新增點擊自動播放按鈕的事件
+document.getElementById("auto_replay").addEventListener("click", function() {
+    startAutoExecution();
+});
