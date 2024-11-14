@@ -13,6 +13,8 @@ ctx.lineWidth = 3;         // 設置線條寬度
 // 這裡應該是選擇所有的 img 元素
 const arrow_images = document.querySelectorAll('.button-container img');
 
+const progressBar = document.getElementById("progress-bar");
+
 // 用來遍歷所有的圖片元素並修改其寬度
 arrow_images.forEach((img) => {
     img.style.width = `${gap}px`; // 設置圖片的寬度
@@ -107,6 +109,7 @@ fetch("/static/Log/Gomoku_log/game_log.json")
         console.log(data);  // 這裡打印整個 JSON 資料
         steps = data.steps;
         testOutput.textContent = "JSON 資料載入成功";
+        progressBar.max = steps.length; // 設置進度條的最大值為步數的總長度
     })
     .catch(error => {
         testOutput.textContent = "JSON 資料載入失敗:" + error.message;
@@ -123,6 +126,7 @@ function nextStep() {
         lastPlayer = player; // 更新最後的玩家
         currentStep++;
         drawBoard();
+        updateProgressBar();
     }
     else if (currentStep === steps.length) {
         testOutput.textContent = `玩家${lastPlayer}勝利!`; // 使用最後的玩家
@@ -136,7 +140,7 @@ function prevStep() {
         testOutput.innerHTML = `steps: <s>(${x},${y})</s> ${currentStep+1}/${steps.length}`;
         board[x][y] = 0;
         drawBoard();
-        
+        updateProgressBar();
     }
     else if(currentStep == 0)
     {
@@ -172,3 +176,8 @@ function startAutoExecution() {
 document.getElementById("auto_replay").addEventListener("click", function() {
     startAutoExecution();
 });
+
+function updateProgressBar() {
+    // 更新進度條的位置和文字
+    progressBar.value = currentStep;
+}
