@@ -1,7 +1,7 @@
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 // 假設這是遊戲的棋盤矩陣
-const board = Array.from({ length: 15 }, () => Array(15).fill(0));
+let board = Array.from({ length: 15 }, () => Array(15).fill(0));
 const offset = 25;   //棋盤從50,50開始繪製
 const gap = 30; // 每個格子的大小
 const len = gap * (board[0].length-1);
@@ -130,6 +130,7 @@ function nextStep() {
     }
     else if (currentStep === steps.length) {
         testOutput.textContent = `玩家${lastPlayer}勝利!`; // 使用最後的玩家
+        stopAutoPlay()
     }
 }
 
@@ -159,22 +160,38 @@ document.getElementById("left-arrow").addEventListener("click", function() {
 
 let intervalId; // 用來儲存 setInterval 的返回值
 let isPlaying = false; // 用來記錄是否正在播放
+let isEnd = false;
 
-function startAutoExecution() {
-    if (!isPlaying) {
+function startAutoPlay() {
+    if (!isPlaying) 
+    {
+        if(isEnd)
+        {
+            currentStep = 0;
+            board = Array.from({ length: 15 }, () => Array(15).fill(0));
+            drawBoard();
+            isEnd = false;
+        }
         intervalId = setInterval(nextStep, 100); // 開始自動播放
         document.getElementById("auto_replay").src = "/static/images/video-pause-button.png"; // 切換為暫停圖片
         isPlaying = true;
-    } else {
-        clearInterval(intervalId); // 暫停自動播放
-        document.getElementById("auto_replay").src = "/static/images/play.png"; // 切換回播放圖片
-        isPlaying = false;
     }
+    else 
+    {
+        stopAutoPlay()
+    }
+}
+
+function stopAutoPlay() {
+    clearInterval(intervalId); // 暫停自動播放
+    document.getElementById("auto_replay").src = "/static/images/play.png"; // 切換回播放圖片
+    isPlaying = false;
+    isEnd = true;
 }
 
 // 新增點擊自動播放按鈕的事件
 document.getElementById("auto_replay").addEventListener("click", function() {
-    startAutoExecution();
+    startAutoPlay();
 });
 
 function updateProgressBar() {
