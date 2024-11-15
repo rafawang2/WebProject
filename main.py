@@ -37,24 +37,21 @@ async def SelectPeplay(request: Request):
 # 將得到的BID及GID丟到Replay.html
 replay_board_type = {"BID":0, "GID":0}
 
-def get_board_type(BID=0, GID=0):
+def get_board_type(BID, GID):
     replay_board_type["BID"] = BID
     replay_board_type["GID"] = GID
-    return RedirectResponse(url="/replayBoard")
     
 @app.post("/SelectReplayBoard",response_class=HTMLResponse)
 async def SelectReplayBoard_post(selection: BoardSelection, request: Request):
     get_board_type(selection.BID, selection.GID)
-    return templates.TemplateResponse("SelectReplayBoard.html", {
-        "request": request,
-        "time": current_time
-    })
+    print(f"/SelectReplayBoard/replayBoard?BID={replay_board_type['BID']}&GID={replay_board_type['GID']}")
+    return templates.TemplateResponse("SelectReplayBoard.html", {"request": request, "time": current_time})
     
-@app.get("/replayBoard",response_class=HTMLResponse)
-async def replayBoard(request: Request, BID = replay_board_type["BID"], GID = replay_board_type["GID"]):
+@app.get("/SelectReplayBoard/replayBoard",response_class=HTMLResponse)
+async def replayBoard(request: Request):
     return templates.TemplateResponse("Replay.html", {
-        "BID": BID,
-        "GID": GID,
+        "BID": replay_board_type["BID"],
+        "GID": replay_board_type["GID"],
         "request": request,
         "time": current_time
     })

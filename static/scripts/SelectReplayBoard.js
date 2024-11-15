@@ -60,7 +60,7 @@ function selectBoard(boardID, gameID) {
         document.open();
         document.write(html);
         document.close();
-        window.location.href = "/replayBoard";
+        window.location.href = `/SelectReplayBoard/replayBoard`;
     })
     .catch(error => console.error("Error loading board:", error));
 }

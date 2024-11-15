@@ -1,0 +1,324 @@
+{
+    "steps": [
+        {
+            "step": 1,
+            "x": 7,
+            "y": 2,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 2,
+            "x": 6,
+            "y": 3,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 3,
+            "x": 4,
+            "y": 3,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 4,
+            "x": 1,
+            "y": 0,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 5,
+            "x": 7,
+            "y": 0,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 6,
+            "x": 0,
+            "y": 3,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 7,
+            "x": 1,
+            "y": 2,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 8,
+            "x": 4,
+            "y": 7,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 9,
+            "x": 8,
+            "y": 7,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 10,
+            "x": 6,
+            "y": 1,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 11,
+            "x": 8,
+            "y": 1,
+            "player": -1,
+            "point_x": 7,
+            "point_y": 1
+        },
+        {
+            "step": 12,
+            "x": 1,
+            "y": 8,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 13,
+            "x": 4,
+            "y": 5,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 14,
+            "x": 5,
+            "y": 8,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 15,
+            "x": 3,
+            "y": 0,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 16,
+            "x": 3,
+            "y": 8,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 17,
+            "x": 2,
+            "y": 7,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 18,
+            "x": 3,
+            "y": 6,
+            "player": -1,
+            "point_x": 3,
+            "point_y": 7
+        },
+        {
+            "step": 19,
+            "x": 5,
+            "y": 2,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 20,
+            "x": 5,
+            "y": 4,
+            "player": 1,
+            "point_x": 5,
+            "point_y": 3
+        },
+        {
+            "step": 21,
+            "x": 8,
+            "y": 5,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 22,
+            "x": 6,
+            "y": 5,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 23,
+            "x": 5,
+            "y": 6,
+            "player": 1,
+            "point_x": 5,
+            "point_y": 5
+        },
+        {
+            "step": 24,
+            "x": 6,
+            "y": 7,
+            "player": 1,
+            "point_x": 5,
+            "point_y": 7
+        },
+        {
+            "step": 25,
+            "x": 5,
+            "y": 0,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 26,
+            "x": 4,
+            "y": 1,
+            "player": -1,
+            "point_x": 5,
+            "point_y": 1
+        },
+        {
+            "step": 27,
+            "x": 3,
+            "y": 2,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 28,
+            "x": 2,
+            "y": 1,
+            "player": 1,
+            "point_x": 3,
+            "point_y": 1
+        },
+        {
+            "step": 29,
+            "x": 0,
+            "y": 1,
+            "player": 1,
+            "point_x": 1,
+            "point_y": 1
+        },
+        {
+            "step": 30,
+            "x": 1,
+            "y": 6,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 31,
+            "x": 0,
+            "y": 7,
+            "player": -1,
+            "point_x": 1,
+            "point_y": 7
+        },
+        {
+            "step": 32,
+            "x": 1,
+            "y": 4,
+            "player": -1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 33,
+            "x": 2,
+            "y": 3,
+            "player": 1,
+            "point_x": 1,
+            "point_y": 3
+        },
+        {
+            "step": 34,
+            "x": 3,
+            "y": 4,
+            "player": 1,
+            "point_x": 3,
+            "point_y": 3
+        },
+        {
+            "step": 35,
+            "x": 2,
+            "y": 5,
+            "player": 1,
+            "point_x": 3,
+            "point_y": 5
+        },
+        {
+            "step": 36,
+            "x": 0,
+            "y": 5,
+            "player": 1,
+            "point_x": 1,
+            "point_y": 5
+        },
+        {
+            "step": 37,
+            "x": 7,
+            "y": 8,
+            "player": 1,
+            "point_x": -1,
+            "point_y": -1
+        },
+        {
+            "step": 38,
+            "x": 7,
+            "y": 6,
+            "player": -1,
+            "point_x": 7,
+            "point_y": 7
+        },
+        {
+            "step": 39,
+            "x": 7,
+            "y": 4,
+            "player": -1,
+            "point_x": 7,
+            "point_y": 5
+        },
+        {
+            "step": 40,
+            "x": 8,
+            "y": 3,
+            "player": -1,
+            "point_x": 7,
+            "point_y": 3
+        }
+    ]
+}
