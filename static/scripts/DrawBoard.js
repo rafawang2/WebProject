@@ -73,9 +73,7 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
                         ctx.stroke();
                     }
                 } else if (board[i][j] === 8) {
-                    // 繪製未佔領的格子
-                    // ctx.fillStyle = "#ddd"; // 灰色背景表示未佔領
-                    // ctx.fillRect(x - gap / 2, y - gap / 2, gap, gap);
+                    continue;
                 } else if (board[i][j] === 7) {
                     // 繪製藍色佔領的格子
                     ctx.fillStyle = "blue";

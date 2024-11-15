@@ -1,24 +1,93 @@
+h2 {
+    color: #ffffff !important;
+    background-color: #83b5aa;
+    border-left: 12px solid #5c726e;
+    padding : 1px 1px 1px 20px;
+}
+
 body {
     font-family: Arial, sans-serif;
 }
 #boardGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
     padding: 20px;
 }
-.board-item {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
+/* .board-item {
+    border: 3px solid #00ff1e;
+    border-radius: 10px;
+    padding: 5px;
     text-align: center;
     cursor: pointer;
     background-color: wheat;
-    transition: background-color 0.3s;
+    transition: background-color 100ms;
 }
 .board-item:hover {
-    background-color: #f0f0f0;
+    background-color: #ff6f6f;
+} */
+
+/* CSS */
+.board-item {
+  appearance: button;
+  background-color: #1899D6;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: din-round,sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  line-height: 20px;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: 13px 16px;
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  transition: filter .2s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 100%;
 }
-.board-id {
-    font-weight: bold;
+
+.board-item:after {
+  background-clip: padding-box;
+  background-color: #1CB0F6;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  bottom: -4px;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.board-item, .board-item:focus {
+  user-select: auto;
+}
+
+.board-item:hover:not(:disabled) {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+
+.board-item:disabled {
+  cursor: auto;
+}
+
+.board-item:active {
+  border-width: 4px 0 0;
+  background: none;
 }

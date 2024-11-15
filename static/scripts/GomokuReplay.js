@@ -1,7 +1,16 @@
 //取得文件元素
-const BID = document.getElementById("hiddenBID").value;
-const GID = document.getElementById("hiddenGID").value;
-console.log(`${BID}, ${GID}`)
+const BID = document.getElementById("hiddenBID").value; //str
+const GID = document.getElementById("hiddenGID").value; //str
+const game_status = parseInt(document.getElementById("hiddenStatus").value, 10);
+const player1 = document.getElementById("hiddenP1").value;
+const player2 = document.getElementById("hiddenP2").value;
+let winner = "";
+if(game_status === -1)
+    winner = player1;
+else if(game_status === 1)
+    winner = player2;
+
+console.log(`${BID}, ${GID}, ${game_status}, ${player1}, ${player2}`)
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
@@ -24,8 +33,11 @@ let board = Array.from({ length: 3 }, () => Array(15).fill(0));
 let gap = 0; // 每個格子的大小
 let radius = 0;
 
+let currentStep = 0;    //json list index
+
 function initReplayBoard() 
 {
+    currentStep = 0;
     arrow_images.forEach((img) => {
         img.style.width = `${offset}px`; // 設置圖片的寬度
     });
@@ -107,9 +119,8 @@ fetch(path)
 });
 console.log(steps);
 
-let currentStep = 0;
-let lastPlayer = null; // 儲存最後一次的玩家
-
+console.log(currentStep)
+let isEnd = false;
 function nextStep() {
     if (currentStep < steps.length) {
         const cur_board = steps[currentStep]["board"];
@@ -118,21 +129,27 @@ function nextStep() {
         const player = steps[currentStep]["player"];
         testOutput.textContent = `steps: (${row},${col}) ${currentStep+1}/${steps.length}`;
         board = cur_board;
-        lastPlayer = player; // 更新最後的玩家
         currentStep++;
+        console.log(currentStep)
         drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
         updateProgressBar();
     }
     else if (currentStep === steps.length) {
-        testOutput.textContent = `玩家${lastPlayer}勝利!`; // 使用最後的玩家
-        stopAutoPlay()
+        if(game_status!=2 || game_status!=0) //未完成或是平手
+            testOutput.textContent = `玩家 ${winner} 勝利!`;
+        else if(game_status===0){
+            testOutput.textContent = "平手!"
+        }
+        isEnd = true;
+        stopAutoPlay();
     }
 }
 
 function prevStep() {
-    if (currentStep > 0) {
+    if (currentStep > 1) {
         currentStep--;
-        const cur_board = steps[currentStep]["board"];
+        console.log(currentStep)
+        const cur_board = steps[currentStep-1]["board"];
         const row = steps[currentStep]["row"];
         const col = steps[currentStep]["col"];
         const player = steps[currentStep]["player"];
@@ -140,6 +157,16 @@ function prevStep() {
         board = cur_board;
         drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
         updateProgressBar();
+    }
+    else if(currentStep == 1)
+    {
+        currentStep--;
+        console.log(currentStep)
+        const row = steps[currentStep]["row"];
+        const col = steps[currentStep]["col"];
+        testOutput.innerHTML = `steps: <s>(${row},${col})</s> ${currentStep+1}/${steps.length}`;
+        initReplayBoard();
+        drawBoard(ctx, canvas, GID, board, offset, gap, radius,len)
     }
     else if(currentStep == 0)
     {
@@ -160,14 +187,12 @@ document.getElementById("left-arrow").addEventListener("click", function() {
 
 let intervalId; // 用來儲存 setInterval 的返回值
 let isPlaying = false; // 用來記錄是否正在播放
-let isEnd = false;
 
 function startAutoPlay() {
     if (!isPlaying) 
     {
         if(isEnd)
         {
-            currentStep = 0;
             initReplayBoard();
             drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
             isEnd = false;
@@ -186,7 +211,6 @@ function stopAutoPlay() {
     clearInterval(intervalId); // 暫停自動播放
     document.getElementById("auto_replay").src = "/static/images/play.png"; // 切換回播放圖片
     isPlaying = false;
-    isEnd = true;
 }
 
 // 新增點擊自動播放按鈕的事件
