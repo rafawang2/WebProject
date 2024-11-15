@@ -14,62 +14,62 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
                 // 根據矩陣中的值來決定繪製的內容
                 if (board[i][j] === 5) {
                     // 繪製頂點
-                    ctx.fillStyle = "wheat";
+                    ctx.fillStyle = "black";
                     ctx.beginPath();
-                    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                    ctx.arc(x+gap/2, y+gap/2, radius, 0, 2 * Math.PI);
                     ctx.fill();
                 } else if (board[i][j] === 0) {
                     // 繪製未選中的邊（虛線）
-                    ctx.strokeStyle = "wheat";
+                    ctx.strokeStyle = "black";
                     ctx.setLineDash([5, 5]);
                     ctx.lineWidth = 3;
                     if (i % 2 === 0) {
                         // 水平線
                         ctx.beginPath();
-                        ctx.moveTo(x - gap / 2, y);
-                        ctx.lineTo(x + gap / 2, y);
+                        ctx.moveTo(x - gap/2 + radius, y + gap/2);
+                        ctx.lineTo(x + gap*3/2 - radius, y + gap/2);
                         ctx.stroke();
                     } else {
                         // 垂直線
                         ctx.beginPath();
-                        ctx.moveTo(x, y - gap / 2);
-                        ctx.lineTo(x, y + gap / 2);
+                        ctx.moveTo(x + gap/2, y - gap/2 + radius);
+                        ctx.lineTo(x + gap/2, y + gap*3/2 - radius);
                         ctx.stroke();
                     }
                 } else if (board[i][j] === -1) {
                     // 繪製藍色的實線
-                    ctx.strokeStyle = "#00E3E3";
+                    ctx.strokeStyle = "blue";
                     ctx.setLineDash([]);
                     ctx.lineWidth = 5;
                     if (i % 2 === 0) {
                         // 水平線
                         ctx.beginPath();
-                        ctx.moveTo(x - gap / 2, y);
-                        ctx.lineTo(x + gap / 2, y);
+                        ctx.moveTo(x - gap/2 + radius, y + gap/2);
+                        ctx.lineTo(x + gap*3/2 - radius, y + gap/2);
                         ctx.stroke();
                     } else {
                         // 垂直線
                         ctx.beginPath();
-                        ctx.moveTo(x, y - gap / 2);
-                        ctx.lineTo(x, y + gap / 2);
+                        ctx.moveTo(x + gap/2, y - gap/2 + radius);
+                        ctx.lineTo(x + gap/2, y + gap*3/2 - radius);
                         ctx.stroke();
                     }
                 } else if (board[i][j] === 1) {
                     // 繪製紅色的實線
-                    ctx.strokeStyle = "#FF9224";
+                    ctx.strokeStyle = "red";
                     ctx.setLineDash([]);
                     ctx.lineWidth = 5;
                     if (i % 2 === 0) {
                         // 水平線
                         ctx.beginPath();
-                        ctx.moveTo(x - gap / 2, y);
-                        ctx.lineTo(x + gap / 2, y);
+                        ctx.moveTo(x - gap/2 + radius, y + gap/2);
+                        ctx.lineTo(x + gap*3/2 - radius, y + gap/2);
                         ctx.stroke();
                     } else {
                         // 垂直線
                         ctx.beginPath();
-                        ctx.moveTo(x, y - gap / 2);
-                        ctx.lineTo(x, y + gap / 2);
+                        ctx.moveTo(x + gap/2, y - gap/2 + radius);
+                        ctx.lineTo(x + gap/2, y + gap*3/2 - radius);
                         ctx.stroke();
                     }
                 } else if (board[i][j] === 8) {
@@ -78,12 +78,12 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
                     // ctx.fillRect(x - gap / 2, y - gap / 2, gap, gap);
                 } else if (board[i][j] === 7) {
                     // 繪製藍色佔領的格子
-                    ctx.fillStyle = "#00E3E3";
-                    ctx.fillRect(x - gap / 2, y - gap / 2, gap, gap);
+                    ctx.fillStyle = "blue";
+                    ctx.fillRect(x, y, gap, gap);
                 } else if (board[i][j] === 9) {
                     // 繪製紅色佔領的格子
-                    ctx.fillStyle = "#FF9224";
-                    ctx.fillRect(x - gap / 2, y - gap / 2, gap, gap);
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(x, y, gap, gap);
                 }
             }
         }

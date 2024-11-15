@@ -1,39 +1,42 @@
+//取得文件元素
 const BID = document.getElementById("hiddenBID").value;
 const GID = document.getElementById("hiddenGID").value;
 console.log(`${BID}, ${GID}`)
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
-// 假設這是遊戲的棋盤矩陣
-let board = Array.from({ length: 15 }, () => Array(15).fill(0));
-let offset = 25;   //棋盤從50,50開始繪製
-let gap = 30; // 每個格子的大小
-let len = gap * (board[0].length-1);
-let radius = 10
+const arrow_images = document.querySelectorAll('.button-container img');    //播放圖片及箭頭圖片
+const progressBar = document.getElementById("progress-bar");    //進度條
+const testOutput = document.getElementById("testOutput"); // 獲取 p 標籤
+testOutput.textContent = ""; // 清空 p 標籤的內容0
+const game_div = document.getElementById("game");
+
+// 固定繪製參數
+let offset = 30;   //棋盤從50,50開始繪製
+let len = 400;
 canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
 ctx.strokeStyle = "black";  // 設置線條顏色為黑色
 ctx.lineWidth = 3;         // 設置線條寬度
-// 這裡應該是選擇所有的 img 元素
-const arrow_images = document.querySelectorAll('.button-container img');
 
-const progressBar = document.getElementById("progress-bar");
-
-// 用來遍歷所有的圖片元素並修改其寬度
-arrow_images.forEach((img) => {
-    img.style.width = `${gap}px`; // 設置圖片的寬度
-});
-
-const testOutput = document.getElementById("testOutput"); // 獲取 p 標籤
-testOutput.textContent = ""; // 清空 p 標籤的內容0
+// 非固定繪製參數
+let board = Array.from({ length: 3 }, () => Array(15).fill(0));
+let gap = 0; // 每個格子的大小
+let radius = 0;
 
 function initReplayBoard() 
 {
+    arrow_images.forEach((img) => {
+        img.style.width = `${offset}px`; // 設置圖片的寬度
+    });
+
     if (GID === "1")
     {
         console.log("圍棋!!!");
         board = Array.from({ length: 15 }, () => Array(15).fill(0));
-    }
+        gap = len/(board[0].length-1); // 每個格子的大小
+        radius = 10;
+    }// 這裡應該是選擇所有的 img 元素
     else if (GID === "2")
     {
         console.log("黑白棋!!!");
@@ -42,6 +45,9 @@ function initReplayBoard()
     {
         console.log("五子棋!!!");
         board = Array.from({ length: 15 }, () => Array(15).fill(0));
+        gap = len/(board[0].length-1); // 每個格子的大小
+        radius = 10;
+        console.log(`gap of gomoku: ${gap}`)
     }
     else if(GID === "4")
     {
@@ -58,20 +64,17 @@ function initReplayBoard()
             [0, 8, 0, 8, 0, 8, 0, 8, 0],
             [5, 0, 5, 0, 5, 0, 5, 0, 5]
         ];
-
+        radius = 10;
+        gap = (len-2*offset)/(board[0].length-1); // 每個格子的大小
+        console.log(`gap of dab: ${gap}`)
     }
+    // 用來遍歷所有的圖片元素並修改其寬度
+
 }
 
+// 初次加載時選定模式繪製棋盤
 initReplayBoard();
-
-const game_div = document.getElementById("game");
-// game_div.style.width = (canvas.width + offset) + "px";
-// game_div.style.height = (canvas.height + offset) + "px";
-
-// 初次加載時繪製棋盤
 drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
-
-
 
 let steps = [];  // 初始時為空，之後從 JSON 載入資料
 let path = "";
