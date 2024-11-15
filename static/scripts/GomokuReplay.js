@@ -45,7 +45,7 @@ function initReplayBoard()
     if (GID === "1")
     {
         console.log("圍棋!!!");
-        board = Array.from({ length: 15 }, () => Array(15).fill(0));
+        board = Array.from({ length: 19 }, () => Array(19).fill(0));
         gap = len/(board[0].length-1); // 每個格子的大小
         radius = 10;
     }// 這裡應該是選擇所有的 img 元素
@@ -222,3 +222,25 @@ function updateProgressBar() {
     // 更新進度條的位置和文字
     progressBar.value = currentStep;
 }
+
+// 進度條拖動事件處理
+progressBar.addEventListener("input", function () {
+    const stepValue = parseInt(progressBar.value, 10);
+    currentStep = stepValue; // 更新當前步數
+    console.log(`拖動進度條: 當前步數 ${currentStep}`);
+    
+    // 更新棋盤顯示
+    if (currentStep > 0 && currentStep <= steps.length) {
+        const cur_board = steps[currentStep - 1]["board"];
+        board = cur_board;
+        drawBoard(ctx, canvas, GID, board, offset, gap, radius, len);
+        const row = steps[currentStep - 1]["row"];
+        const col = steps[currentStep - 1]["col"];
+        testOutput.textContent = `steps: (${row},${col}) ${currentStep}/${steps.length}`;
+    } else if (currentStep === 0) {
+        // 如果拖到 0，重新初始化棋盤
+        initReplayBoard();
+        drawBoard(ctx, canvas, GID, board, offset, gap, radius, len);
+        testOutput.textContent = "到底了!";
+    }
+});
