@@ -109,9 +109,12 @@ let lastPlayer = null; // 儲存最後一次的玩家
 
 function nextStep() {
     if (currentStep < steps.length) {
-        const { x, y, player } = steps[currentStep];
-        testOutput.textContent = `steps: (${x},${y}) ${currentStep+1}/${steps.length}`;
-        board[x][y] = player;
+        const cur_board = steps[currentStep]["board"];
+        const row = steps[currentStep]["row"];
+        const col = steps[currentStep]["col"];
+        const player = steps[currentStep]["player"];
+        testOutput.textContent = `steps: (${row},${col}) ${currentStep+1}/${steps.length}`;
+        board = cur_board;
         lastPlayer = player; // 更新最後的玩家
         currentStep++;
         drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
@@ -126,14 +129,19 @@ function nextStep() {
 function prevStep() {
     if (currentStep > 0) {
         currentStep--;
-        const { x, y } = steps[currentStep];
-        testOutput.innerHTML = `steps: <s>(${x},${y})</s> ${currentStep+1}/${steps.length}`;
-        board[x][y] = 0;
+        const cur_board = steps[currentStep]["board"];
+        const row = steps[currentStep]["row"];
+        const col = steps[currentStep]["col"];
+        const player = steps[currentStep]["player"];
+        testOutput.innerHTML = `steps: <s>(${row},${col})</s> ${currentStep+1}/${steps.length}`;
+        board = cur_board;
         drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
         updateProgressBar();
     }
     else if(currentStep == 0)
     {
+        initReplayBoard();
+        drawBoard(ctx, canvas, GID, board, offset, gap, radius,len)
         testOutput.textContent = "到底了!"
     }
 
