@@ -57,7 +57,6 @@ function initReplayBoard()
         board[4][4] = 1;
         board[4][5] = -1;
         board[5][4] = -1;
-        console.log(board);
         gap = len/(board[0].length); // 每個格子的大小
         radius = 10;
     }
@@ -87,6 +86,7 @@ function initReplayBoard()
         radius = 10;
         gap = (len-2*offset)/(board[0].length-1); // 每個格子的大小
         console.log(`gap of dab: ${gap}`)
+        console.log(board);
     }
     // 用來遍歷所有的圖片元素並修改其寬度
 
@@ -98,9 +98,10 @@ drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
 
 let steps = [];  // 初始時為空，之後從 JSON 載入資料
 let path = "";
+let msg = "";
 if(GID==="1") //圍棋
 {
-    path = "/static/Log/GO_log/game_log.json"; 
+    path = "/static/Log/GO_log/game_log.json";
 }
 else if(GID==="2") //黑白棋
 {
@@ -125,9 +126,7 @@ fetch(path)
 .catch(error => {
     testOutput.textContent = "JSON 資料載入失敗:" + error.message;
 });
-console.log(steps);
 
-console.log(currentStep)
 let isEnd = false;
 function nextStep() {
     if (currentStep < steps.length) {

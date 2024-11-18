@@ -40,6 +40,7 @@ function drawWhite(x,y){
 
 function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log(board);
     // 繪製棋盤線條
     if(game_type==="2") //黑白棋
     {
@@ -59,7 +60,6 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
             ctx.lineTo(x, offset + len);
             ctx.stroke();
         }        
-        console.log(board);
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[0].length; j++) {
                 const x = j * gap + offset + gap/2;
