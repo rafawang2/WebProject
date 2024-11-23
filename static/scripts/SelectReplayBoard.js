@@ -58,20 +58,5 @@ fetch("/static/Log/Replay_log/ReplayBoard_log.json")
 
 function selectBoard(boardID, gameID, status, p1, p2) {
     console.log(`選擇的棋盤 ID: ${boardID}, 遊戲代號: ${gameID}, 遊戲狀態: ${status}, 玩家1: ${p1}, 玩家2: ${p2}`);
-    // 使用 fetch 發送 POST 請求
-    fetch("/SelectReplayBoard", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ BID: boardID, GID: gameID, status: status, player1:p1, player2:p2 }),
-    })
-    .then(response => response.text())
-    .then(html => {
-        document.open();
-        document.write(html);
-        document.close();
-        window.location.href = `/SelectReplayBoard/replayBoard`;
-    })
-    .catch(error => console.error("Error loading board:", error));
+    window.location.href = `/SelectReplayBoard/replayBoard?BID=${boardID}&GID=${gameID}`;
 }

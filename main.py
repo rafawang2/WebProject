@@ -1,4 +1,4 @@
-import uvicorn
+import uvicorn, json
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
@@ -37,29 +37,31 @@ async def aboutpage(request: Request):
 async def SelectPeplay(request: Request):
     return templates.TemplateResponse("SelectReplayBoard.html", {"request": request, "time": current_time})
 
-# 將得到的BID及GID丟到Replay.html
-replay_board_type = {"BID":0, "GID":0, "status":0, "player1":"", "player2":""}
 
-def get_board_type(BID, GID,status,p1,p2):
-    replay_board_type["BID"] = BID
-    replay_board_type["GID"] = GID
-    replay_board_type["status"] = status
-    replay_board_type["player1"] = p1
-    replay_board_type["player2"] = p2
-    
-@app.post("/SelectReplayBoard",response_class=HTMLResponse)
-async def SelectReplayBoard_post(selection: BoardSelection, request: Request):
-    get_board_type(selection.BID, selection.GID,status=selection.status,p1=selection.player1,p2=selection.player2 )
-    return templates.TemplateResponse("SelectReplayBoard.html", {"request": request, "time": current_time})
-    
+
 @app.get("/SelectReplayBoard/replayBoard",response_class=HTMLResponse)
-async def replayBoard(request: Request):
-    return templates.TemplateResponse("Replay.html", {
-        "BID":     replay_board_type["BID"],
-        "GID":     replay_board_type["GID"],
-        "status":  replay_board_type["status"],
-        "player1": replay_board_type["player1"],
-        "player2": replay_board_type["player2"],
+async def replayBoard(request: Request, BID: int, GID: int):
+    file_name = 'static/Log/Replay_log/ReplayBoard_log.json'
+    # 讀取 JSON 文件並轉換為 Python 字典
+    with open(file_name, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    
+    #查找BID，之後由資料庫查找代替
+    result = None
+    for board in data["ReplayBoards"]:
+        if board["BID"] == BID:
+            result = board
+            break
+    status = result["status"]
+    p1 = result["player1"]
+    p2 = result["player2"]
+    
+    return templates.TemplateResponse("Replay.html", {  #將此局參數回傳給Replay.html並顯示
+        "BID":     BID,
+        "GID":     GID,
+        "status":  status,
+        "player1": p1,
+        "player2": p2,
         "request": request,
         "time":    current_time
     })
