@@ -4,6 +4,7 @@ const GID = document.getElementById("hiddenGID").value; //str
 const game_status = parseInt(document.getElementById("hiddenStatus").value, 10);
 const player1 = document.getElementById("hiddenP1").value;
 const player2 = document.getElementById("hiddenP2").value;
+
 let winner = "";
 if(game_status === -1)
     winner = player1;
@@ -17,10 +18,13 @@ const ctx = canvas.getContext("2d");
 const arrow_images = document.querySelectorAll('.button-container img');    //播放圖片及箭頭圖片
 const progressBar = document.getElementById("progress-bar");    //進度條
 const testOutput = document.getElementById("testOutput"); // 獲取 p 標籤
-testOutput.textContent = ""; // 清空 p 標籤的內容0
+const speedSelector = document.getElementById('speed_selector');    //速度選擇器
+const currentSpeed = document.getElementById('current_speed');
 const game_div = document.getElementById("game");
+testOutput.textContent = ""; // 清空 p 標籤的內容0
 
 // 固定繪製參數
+let play_speed = 100; //每100毫秒移動一步
 let offset = 30;   //棋盤從50,50開始繪製
 let len = 400;
 canvas.width = len + offset*2;  // 設置畫布寬度
@@ -137,7 +141,6 @@ function nextStep() {
         testOutput.textContent = `steps: (${row},${col}) ${currentStep+1}/${steps.length}`;
         board = cur_board;
         currentStep++;
-        console.log(currentStep)
         drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
         updateProgressBar();
     }
@@ -155,7 +158,6 @@ function nextStep() {
 function prevStep() {
     if (currentStep > 1) {
         currentStep--;
-        console.log(currentStep)
         const cur_board = steps[currentStep-1]["board"];
         const row = steps[currentStep]["row"];
         const col = steps[currentStep]["col"];
@@ -168,7 +170,6 @@ function prevStep() {
     else if(currentStep == 1)
     {
         currentStep--;
-        console.log(currentStep)
         const row = steps[currentStep]["row"];
         const col = steps[currentStep]["col"];
         testOutput.innerHTML = `steps: <s>(${row},${col})</s> ${currentStep+1}/${steps.length}`;
@@ -204,7 +205,7 @@ function startAutoPlay() {
             drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
             isEnd = false;
         }
-        intervalId = setInterval(nextStep, 100); // 開始自動播放
+        intervalId = setInterval(nextStep, play_speed); // 開始自動播放
         document.getElementById("auto_replay").src = "/static/images/video-pause-button.png"; // 切換為暫停圖片
         isPlaying = true;
     }
@@ -251,3 +252,15 @@ progressBar.addEventListener("input", function () {
         testOutput.textContent = "到底了!";
     }
 });
+
+speedSelector.addEventListener('change', () => {
+    const selectedSpeed = parseFloat(speedSelector.value);
+    currentSpeed.textContent = `目前倍速: ${selectedSpeed}x`;
+    play_speed = 100 * (1/selectedSpeed);
+    if (isPlaying) {
+        // 如果正在播放，重新啟動 interval
+        clearInterval(intervalId);
+        console.log(play_speed)
+        intervalId = setInterval(nextStep, play_speed);
+    }
+  });
