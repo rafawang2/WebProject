@@ -47,14 +47,10 @@ async def replayBoard(request: Request, BID: int, GID: int):
         data = json.load(file)
     
     #查找BID，之後由資料庫查找代替
-    result = None
-    for board in data["ReplayBoards"]:
-        if board["BID"] == BID:
-            result = board
-            break
-    status = result["status"]
-    p1 = result["player1"]
-    p2 = result["player2"]
+    board = data["ReplayBoards"].get(str(BID))
+    status = board["status"]
+    p1 = board["player1"]
+    p2 = board["player2"]
     
     return templates.TemplateResponse("Replay.html", {  #將此局參數回傳給Replay.html並顯示
         "BID":     BID,

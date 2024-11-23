@@ -1,32 +1,28 @@
 {
-    "ReplayBoards": [
-        {
-            "BID": 2,
+    "ReplayBoards": {
+        "2": {
             "GID": 3,
             "player1": "rafawang2",
             "player2": "ccuc",
             "status": -1
         },
-        {
-            "BID": 18,
+        "18": {
             "GID": 4,
             "player1": "ccuc",
             "player2": "rafawang2",
             "status": -1
         },
-        {
-            "BID": 26,
+        "26": {
             "GID": 1,
             "player1": "DQL",
             "player2": "rafawang2",
             "status": -1
         },
-        {
-            "BID": 28,
+        "28": {
             "GID": 2,
             "player1": "DQL",
             "player2": "rafawang2",
             "status": -1
         }
-    ]
+    }
 }
