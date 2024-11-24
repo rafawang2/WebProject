@@ -13,13 +13,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-class BoardSelection(BaseModel):
-    BID: int
-    GID: int
-    status: int
-    player1: str
-    player2: str
-
 @app.get("/",response_class=HTMLResponse)
 async def gotohome(request: Request):
     # 導向到 /home

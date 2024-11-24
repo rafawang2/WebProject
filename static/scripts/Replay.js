@@ -14,13 +14,13 @@ else if(game_status === 1)
 console.log(`${BID}, ${GID}, ${game_status}, ${player1}, ${player2}`)
 
 const canvas = document.getElementById("board");
+const replay_utils = document.getElementById("detail_container");
 const ctx = canvas.getContext("2d");
 const arrow_images = document.querySelectorAll('.button-container img');    //播放圖片及箭頭圖片
 const progressBar = document.getElementById("progress-bar");    //進度條
 const testOutput = document.getElementById("testOutput"); // 獲取 p 標籤
 const speedSelector = document.getElementById('speed_selector');    //速度選擇器
 const currentSpeed = document.getElementById('current_speed');
-const game_div = document.getElementById("game");
 testOutput.textContent = ""; // 清空 p 標籤的內容0
 
 // 固定繪製參數
@@ -29,6 +29,8 @@ let offset = 30;   //棋盤從50,50開始繪製
 let len = 400;
 canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
+replay_utils.width = canvas.width;
+replay_utils.height = canvas.height;
 ctx.strokeStyle = "black";  // 設置線條顏色為黑色
 ctx.lineWidth = 3;         // 設置線條寬度
 

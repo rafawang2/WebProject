@@ -23,6 +23,31 @@
             "player1": "DQL",
             "player2": "rafawang2",
             "status": -1
+        },
+
+        "30": {
+            "GID": 3,
+            "player1": "rafawang2",
+            "player2": "ccuc",
+            "status": -1
+        },
+        "38": {
+            "GID": 4,
+            "player1": "ccuc",
+            "player2": "rafawang2",
+            "status": -1
+        },
+        "46": {
+            "GID": 1,
+            "player1": "DQL",
+            "player2": "rafawang2",
+            "status": -1
+        },
+        "48": {
+            "GID": 2,
+            "player1": "DQL",
+            "player2": "rafawang2",
+            "status": -1
         }
     }
 }

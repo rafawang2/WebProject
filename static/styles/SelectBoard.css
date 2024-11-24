@@ -1,31 +1,32 @@
-h2 {
-    color: #ffffff !important;
-    background-color: #83b5aa;
-    border-left: 12px solid #5c726e;
-    padding : 1px 1px 1px 20px;
+body {
+  font-family: Arial, sans-serif;
 }
 
-body {
-    font-family: Arial, sans-serif;
+#select_board_container {
+  margin-top: 2%;
+  background-color: #83b5aa; /* 主容器背景 */
+  border-radius: 30px; /* 圓角縮小，視覺更緊湊 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加陰影 */
+  padding: 20px; /* 增加內部填充 */
 }
+
+h2 {
+  margin: 0; /* 去掉默認外邊距，讓標題更貼合容器 */
+  text-align: center;
+  color: #ffffff;
+  background-color: #039a79; /* 與容器背景形成協調的對比 */
+  border-radius: 30px; /* 與外層容器統一的圓角設計 */
+  padding: 15px; /* 增加內部間距 */
+  font-size: 1.5rem; /* 增大字體 */
+  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.1); /* 內部陰影增強層次 */
+}
+
 #boardGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
     padding: 20px;
 }
-/* .board-item {
-    border: 3px solid #00ff1e;
-    border-radius: 10px;
-    padding: 5px;
-    text-align: center;
-    cursor: pointer;
-    background-color: wheat;
-    transition: background-color 100ms;
-}
-.board-item:hover {
-    background-color: #ff6f6f;
-} */
 
 /* CSS */
 .board-item {

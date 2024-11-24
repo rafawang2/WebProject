@@ -3,7 +3,7 @@ fetch("/static/Log/Replay_log/ReplayBoard_log.json")
     .then(data => {
         console.log(data);
         const boardGrid = document.getElementById("boardGrid");
-
+        
         // 從 JSON 中取得所有棋盤的資訊 (改為 Object.entries 來遍歷鍵值對)
         Object.entries(data.ReplayBoards).forEach(([bid, board]) => {
             // 建立棋盤的按鈕或區塊
