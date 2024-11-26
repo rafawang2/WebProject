@@ -8,26 +8,33 @@ body
     padding: 0;
 }
 
-li,a
-{
-    font-weight: 100;
-    font-size: 25px;
-    color:#ffffff;
-    text-decoration: none;
-}
-
 header
 {
     display: flex;
     align-items:center;
-    background-color: gray;
+    background-color: rgb(148, 146, 146);
 }
 
-a
+#link_back_container {
+    margin-right: auto;
+}
+
+header #link_back_container a
 {
+    text-decoration: none;
+    margin: 15px;
+    display: inline-flex;
+    padding: 15px;
+    padding: 15px; /* 增加內部間距 */
+    font-size: 1.5rem; /* 增大字體 */
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.1); /* 內部陰影增強層次 */
+    color: white;
+    transition: all 0.3s ease 0s;
     padding: 5px 10px 5px 10px;
-    /* Permalink - use to edit and share this gradient. 固定鏈接 - 用於編輯和分享此漸變： https://colorzilla.com/gradient-editor/#bfd255+0,8eb92a+28,9ecb2d+100 */
-    background: linear-gradient(135deg,  rgba(191,210,85,1) 0%,rgba(142,185,42,1) 28%,rgba(158,203,45,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: linear-gradient(135deg,
+      rgba(191,210,85,1) 0%,
+      rgba(142,185,42,1) 28%,
+      rgba(158,203,45,1) 100%);
 
 
     border-radius: 20px;
@@ -35,12 +42,122 @@ a
     transition: all 0.3s ease 0s;
 }
 
-a:hover
+header #link_back_container a:hover
 {
+    text-decoration: none;
     cursor: pointer;
-    /* Permalink - use to edit and share this gradient. 固定鏈接 - 用於編輯和分享此漸變： https://colorzilla.com/gradient-editor/#1e5799+27,2989d8+50,1e5799+95&0+0,1+5,1+5,0.8+15,1+81,0.8+97,0+100 */
-    background: linear-gradient(135deg,  rgba(30,87,153,0) 0%,rgba(30,87,153,1) 5%,rgba(30,87,153,0.8) 15%,rgba(30,87,153,0.84) 27%,rgba(41,137,216,0.91) 50%,rgba(33,103,173,1) 81%,rgba(30,87,153,0.83) 95%,rgba(30,87,153,0.8) 97%,rgba(30,87,153,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: linear-gradient(135deg,
+      rgba(30,87,153,0) 0%,
+      rgba(30,87,153,1) 5%,
+      rgba(30,87,153,0.8) 15%,
+      rgba(30,87,153,0.84) 27%,
+      rgba(41,137,216,0.91) 50%,
+      rgba(33,103,173,1) 81%,
+      rgba(30,87,153,0.83) 95%,
+      rgba(30,87,153,0.8) 97%,
+      rgba(30,87,153,0) 100%);
 
+}
+
+.accordion {
+    margin-left: auto;
+    width: auto;
+    min-width: 150px;
+    max-width: 300px;
+    position: relative; /* 確保內容定位基於此容器 */
+    z-index: 1; /* 提高折疊選單的層級，確保它在其他元素上方 */
+}
+
+.accordion-item {
+    display: flex;
+    flex-wrap: wrap;
+    /* border-bottom: 1px solid #ddd; */
+    position: relative;
+}
+
+.accordion-header {
+    color: #ffffff;
+    background: gray;
+    border: none;
+    text-align: left;
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.3s;
+    z-index: 2;
+    position: relative;
+    width: 100%;
+    /* Flexbox 對齊 */
+    display: flex;
+    align-items: center; /* 垂直對齊 */
+    justify-content: flex-start; /* 靠左對齊內容 */
+}
+
+.accordion-header:hover {
+    background: linear-gradient(   135deg,  
+        rgba(191,210,85,1) 0%,
+        rgba(142,185,42,1) 28%,
+        rgba(158,203,45,1) 100%);
+}
+
+.accordion-content {
+    flex-grow: 1;
+    flex-basis: 200;
+    position: absolute; /* 絕對定位，覆蓋其他內容 */
+    left: 0;
+    top: 100%; /* 從按鈕底部展開 */
+    background: gray;
+    width: 100%;
+    overflow: hidden;
+    max-height: 0; /* 預設折疊 */
+    transition: max-height 0.3s ease-out;
+    z-index: 1; /* 確保內容在正確層級顯示 */
+
+    align-items: center; /* 垂直對齊 */
+    justify-content: right; /* 靠左對齊內容 */
+}
+
+#user_img {
+    border: 3px solid black;
+    border-radius: 50%;
+    margin: 0px 25px 0px 25px;
+    margin-left: 10px; /* 圖片與文字之間留一些空間 */
+    flex-shrink: 0; /* 防止圖片被壓縮 */
+
+}
+
+.accordion-content a:hover {
+    cursor: pointer;
+    background: linear-gradient(   135deg,  
+        rgba(191,210,85,1) 0%,
+        rgba(142,185,42,1) 28%,
+        rgba(158,203,45,1) 100%);
+}
+
+h2 {
+    margin: 0; /* 去掉默認外邊距，讓標題更貼合容器 */
+    text-align: center;
+    color: #ffffff;
+    background-color: #039a79; /* 與容器背景形成協調的對比 */
+    border-radius: 30px; /* 與外層容器統一的圓角設計 */
+    padding: 15px; /* 增加內部間距 */
+    font-size: 1.5rem; /* 增大字體 */
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.1); /* 內部陰影增強層次 */
+  }
+
+.accordion-content a
+{
+    display: flex; /* 讓 <a> 成為區塊級元素 */
+    justify-content: flex-start; /* 將文字移到左邊 */
+    border-top: lightgray 1px solid;
+    align-items: center; /* 垂直居中對齊 */
+    width: 100%;
+    font-weight: 100;
+    font-size: 25px;
+    color:#000000;
+    text-decoration: none;
+    padding: 5px
 }
 .logo
 {
@@ -51,42 +168,9 @@ a:hover
     
 }
 
-.player_state
-{
-    font-weight: 500;
-    font-size: 25px;
-    color: white;
-    margin: 0px 0px 0px 200px;
-    background: none;
-}
 .web_name
 {
     font-size: 35px;
     color: white;
     margin: 0px 300px 0px 0px;
-}
-.nav_links
-{
-    list-style: none;
-}
-.nav_links li
-{
-    display:inline-block;
-    margin: 0px 30px 0px 0px;
-    font-size: 30px;
-}
-.nav_links li a
-{
-    /* 轉場 */
-    transition: all 0.3s ease 0s;
-}
-.nav_links li a:hover
-{
-    cursor: pointer;
-}
-
-#user_img {
-    border: 3px solid black;
-    border-radius: 50px;
-    margin: 0px 25px 0px 25px;
 }
