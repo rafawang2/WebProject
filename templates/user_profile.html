@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>棋類對局平台</title>
+    <link rel="stylesheet" href="/static/styles/main.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/profile.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/navbar.css?v={{ time }}">
+</head>
+<body>
+    <!-- Todo 導覽列位置 -->
+    <div id="nav"></div>
+    <div id="profile_container">
+        <div id="user_container">
+            <div id="img_container">
+                <img id = "user_profile_img" src="/static/images/man.png" alt="user_img" width="100px" height="100px">
+                <input type="file" id="file_input" accept="image/*" style="display:none;">
+                <button id="upload_button">添加圖片</button>
+            </div>
+            <div id="name_status_container">
+                <p>rafawang2</p>
+                <p><img src="/static/images/online.png" alt="online" width="10px" height="10px"/>在線</p>
+                <p>加入日期: 2024/11/26</p>
+            </div>
+        </div>
+        <div id="game_record_container"></div>
+    </div>
+    <script src="/static/scripts/profile.js?v={{ time }}"></script>
+    <script src="/static/scripts/nav.js?v={{ time }}"></script>
+</body>
+</html>

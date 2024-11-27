@@ -1,0 +1,129 @@
+/* 確保頁面整體樣式一致 */
+body {
+    font-family: Arial, sans-serif;
+    /* background-color: #f4f4f4; */
+    margin: 0;
+    padding: 0;
+}
+
+#profile_container {
+    margin-top: 25px;
+    width: 50%;
+    max-width: 1000px;
+    justify-self: center;
+}
+
+/* 個人資料區域 */
+#user_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+/* 圖片區域 */
+#img_container {
+    display: flex;
+    flex-direction: column; /* 讓圖片和按鈕垂直排列 */
+    align-items: center;
+    margin-right: 20px; /* 圖片和文字區塊之間的間距 */
+}
+
+#img_container img {
+    border-radius: 50%; /* 圓形圖片 */
+    border: 2px solid #ddd; /* 圖片邊框 */
+    margin-bottom: 10px; /* 圖片和按鈕之間的間距 */
+}
+
+/* 按鈕樣式 */
+#img_container button {
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #4CAF50; /* 綠色背景 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#img_container button:hover {
+    background-color: #45a049; /* 滑鼠懸停時的顏色變化 */
+}
+
+/* 文字和狀態區域 */
+#name_status_container p {
+    margin: 5px 0; /* 文字上下間距 */
+    color: #333; /* 文字顏色 */
+}
+
+#name_status_container p:first-child {
+    font-size: 24px; /* 用戶名大一點 */
+    font-weight: bold;
+}
+
+#name_status_container p img {
+    margin-right: 5px; /* 圖片和文字之間的間距 */
+}
+
+/* 垂直排列的區域 */
+#name_status_container {
+    display: flex;
+    flex-direction: column;
+}
+
+#user_profile_img {
+    width: 100px; /* 固定寬度 */
+    height: 100px; /* 固定高度 */
+    object-fit: cover; /* 確保圖片按比例裁剪 */
+    border-radius: 50%; /* 圓形（可選） */
+}
+
+#game_record_container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 每行兩個網格 */
+    gap: 20px; /* 網格之間的間距 */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.game-record {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.game-record h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.game-record p {
+    margin: 8px 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+
+/* 響應式設計：讓頁面在小屏幕上也能適應 */
+@media (max-width: 600px) {
+    #user_container {
+        flex-direction: column; /* 當螢幕較小時，改為垂直排列 */
+        align-items: center;
+    }
+
+    #img_container {
+        margin-bottom: 20px; /* 圖片和文字之間有一些間距 */
+    }
+}

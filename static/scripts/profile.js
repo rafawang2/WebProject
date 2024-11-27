@@ -1,0 +1,66 @@
+document.getElementById("upload_button").addEventListener("click", function() {
+    // 當按鈕被點擊時，觸發隱藏的 <input> 文件選擇框
+    document.getElementById("file_input").click();
+});
+
+document.getElementById("file_input").addEventListener("change", function(event) {
+    const file = event.target.files[0]; // 獲取選擇的文件
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file); // 將圖片附加到表單數據
+
+        // 使用 fetch 發送圖片到 FastAPI 伺服器
+        fetch('/upload/', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => { //data為伺服器返回的json字串{"success": True, "image_url": f"/static/images/man.png"}
+            if (data.success) {
+                // 更新頁面顯示上傳後的圖片
+                location.reload(); // 這裡重新加載頁面
+                document.getElementById("user_img").src = data.image_url;
+            } else {
+                alert('上傳失敗');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('上傳錯誤');
+        });
+    }
+});
+
+fetch("/static/Log/GameRecord_log/Record.json")
+    .then(response => response.json())
+    .then(data => {
+        const Record_container = document.getElementById("game_record_container");
+        
+        // 從 JSON 中取得所有棋盤的資訊 (改為 Object.entries 來遍歷鍵值對)
+        Object.entries(data.record).forEach(([GID, board]) => {
+            // 建立棋盤的按鈕或區塊
+            const boardItem = document.createElement("div");
+            boardItem.className = "game-record";
+
+            let GameType = "";
+            if (GID === "1") {
+                GameType = "圍棋";
+            } else if (GID === "2") {
+                GameType = "黑白棋";
+            } else if (GID === "3") {
+                GameType = "五子棋";
+            } else if (GID === "4") {
+                GameType = "點格棋";
+            }
+
+            // 設定棋盤的顯示內容
+            boardItem.innerHTML = `
+                <h3>${GameType}</h3>
+                <p>總場數：${board.total}</p>
+                <p>勝場：${board.win}</p>
+                <p>敗場：${board.lose}</p>
+            `;
+            Record_container.appendChild(boardItem);
+        });
+    })
+    .catch(error => console.error("無法載入 JSON 資料:", error));
