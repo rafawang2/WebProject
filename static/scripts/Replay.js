@@ -208,7 +208,7 @@ function startAutoPlay() {
             isEnd = false;
         }
         intervalId = setInterval(nextStep, play_speed); // 開始自動播放
-        document.getElementById("auto_replay").src = "/static/images/video-pause-button.png"; // 切換為暫停圖片
+        document.getElementById("auto_replay").src = "/static/images/tools/video-pause-button.png"; // 切換為暫停圖片
         isPlaying = true;
     }
     else 
@@ -219,7 +219,7 @@ function startAutoPlay() {
 
 function stopAutoPlay() {
     clearInterval(intervalId); // 暫停自動播放
-    document.getElementById("auto_replay").src = "/static/images/play.png"; // 切換回播放圖片
+    document.getElementById("auto_replay").src = "/static/images/tools/play.png"; // 切換回播放圖片
     isPlaying = false;
 }
 
@@ -237,7 +237,6 @@ function updateProgressBar() {
 progressBar.addEventListener("input", function () {
     const stepValue = parseInt(progressBar.value, 10);
     currentStep = stepValue; // 更新當前步數
-    console.log(`拖動進度條: 當前步數 ${currentStep}`);
     
     // 更新棋盤顯示
     if (currentStep > 0 && currentStep <= steps.length) {

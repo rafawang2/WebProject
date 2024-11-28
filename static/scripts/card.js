@@ -1,9 +1,9 @@
 // 定義每個遊戲的資料
 const games = [
-    { name: "圍棋", image: "/static/images/GO.jpg", description: "點擊以遊玩" ,GID:"1"},
-    { name: "五子棋", image: "/static/images/5.jpg", description: "點擊以遊玩" ,GID:"2"},
-    { name: "黑白棋", image: "/static/images/othello.jpg", description: "點擊以遊玩",GID:"3" },
-    { name: "點格棋", image: "/static/images/D&B.jpg", description: "點擊以遊玩",GID:"4" }
+    { name: "圍棋", image: "/static/images/tools/GO.jpg", description: "點擊以遊玩" ,GID:"1"},
+    { name: "五子棋", image: "/static/images/tools/5.jpg", description: "點擊以遊玩" ,GID:"2"},
+    { name: "黑白棋", image: "/static/images/tools/othello.jpg", description: "點擊以遊玩",GID:"3" },
+    { name: "點格棋", image: "/static/images/tools/D&B.jpg", description: "點擊以遊玩",GID:"4" }
 ];
 
 // 取得主容器元素

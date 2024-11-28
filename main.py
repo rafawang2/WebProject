@@ -77,10 +77,24 @@ async def upload_image(image: UploadFile = File(...)):
             f.write(await image.read())  # 儲存圖片到伺服器
 
         # 返回儲存的圖片的 URL
-        return JSONResponse(content={"success": True, "image_url": f"/static/images/man.png"})
+        return JSONResponse(content={"success": True, "image_url": f"/static/images/users/man.png"})
     except Exception as e:
         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
+
+# 用於保存使用者名稱（簡單模擬存儲）
+class NameRequest(BaseModel):
+    name: str
+user_data = {"name": ""}
+# 保存使用者名稱 API
+@app.post("/save_name/")
+async def save_name(request: NameRequest):
+    try:
+        user_data["name"] = request.name  # 從請求中獲取名稱
+        print(user_data["name"])
+        return JSONResponse(content={"success": True, "name": request.name})
+    except Exception as e:
+        return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
 if __name__ == "__main__":
     uvicorn.run("main:app",host="127.0.0.1",port=8080,reload=True)

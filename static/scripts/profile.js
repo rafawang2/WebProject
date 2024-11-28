@@ -16,11 +16,12 @@ document.getElementById("file_input").addEventListener("change", function(event)
             body: formData,
         })
         .then(response => response.json())
-        .then(data => { //data為伺服器返回的json字串{"success": True, "image_url": f"/static/images/man.png"}
+        .then(data => { //data為伺服器返回的json字串{"success": True, "image_url": f"/static/images/users/man.png"}
             if (data.success) {
                 // 更新頁面顯示上傳後的圖片
+                const timestamp = new Date().getTime(); // 獲取當前時間戳
+                document.getElementById("user_img").src = `${data.image_url}?t=${timestamp}`;
                 location.reload(); // 這裡重新加載頁面
-                document.getElementById("user_img").src = data.image_url;
             } else {
                 alert('上傳失敗');
             }
