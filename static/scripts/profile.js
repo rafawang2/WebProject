@@ -3,8 +3,9 @@ document.getElementById("upload_button").addEventListener("click", function() {
     document.getElementById("file_input").click();
 });
 
+//取得用戶的圖片輸入
 document.getElementById("file_input").addEventListener("change", function(event) {
-    const file = event.target.files[0]; // 獲取選擇的文件
+    const file = event.target.files[0]; // 獲取選擇的文件(只取第一個檔案)
     if (file) {
         const formData = new FormData();
         formData.append('image', file); // 將圖片附加到表單數據
@@ -31,6 +32,7 @@ document.getElementById("file_input").addEventListener("change", function(event)
     }
 });
 
+//取得玩家的遊戲紀錄
 fetch("/static/Log/GameRecord_log/Record.json")
     .then(response => response.json())
     .then(data => {

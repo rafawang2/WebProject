@@ -16,10 +16,14 @@ header
     max-height: 75px;
     min-height: 75px;
     max-width: 100%;
+    min-width: 100%;
 }
 
 #link_back_container {
     margin-right: auto;
+    max-height: 75px;
+    min-width: 250px;
+    display: inline-flex;
 }
 
 header #link_back_container a
@@ -181,4 +185,6 @@ h2 {
     font-size: 35px;
     color: white;
     margin: 0px 300px 0px 0px;
+    max-width: 75px;
+    min-width: 220px;
 }
