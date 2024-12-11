@@ -55,7 +55,7 @@ function initReplayBoard()
         gap = len/(board[0].length-1); // 每個格子的大小
         radius = 10;
     }// 這裡應該是選擇所有的 img 元素
-    else if (GID === "2")
+    else if (GID === "3")
     {
         console.log("黑白棋!!!");
         board = Array.from({ length: 10 }, () => Array(10).fill(0));
@@ -66,7 +66,7 @@ function initReplayBoard()
         gap = len/(board[0].length); // 每個格子的大小
         radius = 10;
     }
-    else if (GID === "3")
+    else if (GID === "2")
     {
         console.log("五子棋!!!");
         board = Array.from({ length: 15 }, () => Array(15).fill(0));
@@ -109,11 +109,11 @@ if(GID==="1") //圍棋
 {
     path = "/static/Log/GO_log/game_log.json";
 }
-else if(GID==="2") //黑白棋
+else if(GID==="3") //黑白棋
 {
     path = "/static/Log/Othello_log/game_log.json";
 }
-else if(GID==="3") //五子棋
+else if(GID==="2") //五子棋
 {
     path = "/static/Log/Gomoku_log/game_log.json";
 }

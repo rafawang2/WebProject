@@ -3,8 +3,13 @@ const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const GID = document.getElementById("hiddenGID").value; //str
 
+// 宣告遊戲
+game = new GomokuGame(15);
+let player = 0;    //預設不存在，看伺服器後決定黑或白
+let winner = 0;
+
 // 假設這是遊戲的棋盤矩陣
-let board = Array.from({ length: 10 }, () => Array(10).fill(0));
+let board = game.board;
 const offset = 25;   //棋盤從50,50開始繪製
 const gap = 50; // 每個格子的大小
 const len = gap * (board[0].length-1);
@@ -13,11 +18,6 @@ canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
 ctx.strokeStyle = "#2894FF";  // 設置線條顏色為黑色
 ctx.lineWidth = 2;         // 設置線條寬度
-
-// 宣告遊戲
-game = new GomokuGame(15);
-let player = 0;    //預設不存在，看伺服器後決定黑或白
-let winner = 0;
 
 // 回合
 let is_myTurn = false;
@@ -145,4 +145,4 @@ function displayMessage(timestamp, sender, content) {
 }
 
 // 初次加載時繪製棋盤
-drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
+drawBoard(ctx, canvas, GID, game.board, offset, gap, radius,len);

@@ -14,9 +14,9 @@ fetch("/static/Log/Replay_log/ReplayBoard_log.json")
             if (board.GID === 1) {
                 GameType = "圍棋";
             } else if (board.GID === 2) {
-                GameType = "黑白棋";
-            } else if (board.GID === 3) {
                 GameType = "五子棋";
+            } else if (board.GID === 3) {
+                GameType = "黑白棋";
             } else if (board.GID === 4) {
                 GameType = "點格棋";
             }
