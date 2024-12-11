@@ -42,7 +42,7 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // console.log(board);
     // 繪製棋盤線條
-    if(game_type==="2") //黑白棋
+    if(game_type==="3") //黑白棋
     {
         ctx.fillStyle = "#02C874";
         ctx.fillRect(offset,offset,len,len);
@@ -156,7 +156,7 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
             }
         }
     }
-    else if(game_type==="1" || game_type==="3") //圍棋&五子棋
+    else if(game_type==="1" || game_type==="2") //圍棋&五子棋
     {
         for (let i = 0; i < board[0].length; i++) {
             const y = offset + i * gap;

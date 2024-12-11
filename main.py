@@ -59,7 +59,7 @@ async def replayBoard(request: Request, BID: int, GID: int):
     })
 
 # 設定圖片儲存的目錄
-UPLOAD_DIR = Path("static/images")
+UPLOAD_DIR = Path("static/images/users")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)  # 如果目錄不存在則創建
 
 #渲染個人資料頁面
@@ -95,6 +95,15 @@ async def save_name(request: NameRequest):
         return JSONResponse(content={"success": True, "name": request.name})
     except Exception as e:
         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
+
+# 遊戲介面
+@app.get("/playGame",response_class=HTMLResponse)
+async def replayBoard(request: Request, GID: int):  
+    return templates.TemplateResponse("PlayGame.html", {  #將此局參數回傳給Replay.html並顯示
+        "GID":     GID,
+        "request": request,
+        "time":    current_time
+    })
 
 if __name__ == "__main__":
     uvicorn.run("main:app",host="127.0.0.1",port=8080,reload=True)

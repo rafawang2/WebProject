@@ -54,22 +54,22 @@ buttons.forEach((button) =>
             case '1':
                 alert('開啟圍棋遊戲');
                 // 這裡可以添加對應的遊戲功能，例如跳轉到其他頁面
-                // window.location.href = '圍棋遊戲頁面URL';
+                // window.location.href = /playGame?GID=1';
                 break;
 
             case '2':
-                alert('開啟五子棋遊戲');
-                // window.location.href = '五子棋遊戲頁面URL';
+                // alert('開啟五子棋遊戲');
+                window.location.href = '/playGame?GID=2';
                 break;
 
             case '3':
                 alert('開啟黑白棋遊戲');
-                // window.location.href = '黑白棋遊戲頁面URL';
+                // window.location.href = '/playGame?GID=3';
                 break;
 
             case '4':
                 alert('開啟點格棋遊戲');
-                // window.location.href = '點格棋遊戲頁面URL';
+                // window.location.href = '/playGame?GID=3';
                 break;
 
             default:
