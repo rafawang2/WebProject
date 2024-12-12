@@ -118,9 +118,9 @@ def format_message(sender, message):
 
 async def main():
     print("WebSocket 伺服器啟動，等待用戶端連線...")
+    # async with serve(chat_handler, "10.106.38.184", 8765) as server:
     async with serve(chat_handler, "localhost", 8765) as server:
         await server.serve_forever()
-
 
 if __name__ == "__main__":
     asyncio.run(main())

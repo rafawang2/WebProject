@@ -24,6 +24,7 @@ let is_myTurn = false;
 
 // 連接到 WebSocket 伺服器
 const ws = new WebSocket("ws://localhost:8765");
+// const ws = new WebSocket("ws://10.106.38.184:8765");
 
 // 初始連線時輸入用戶名稱
 let username = sessionStorage.getItem("user_name");
