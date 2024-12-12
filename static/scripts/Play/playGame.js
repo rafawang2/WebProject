@@ -3,13 +3,11 @@ const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const GID = document.getElementById("hiddenGID").value; //str
 
-// 宣告遊戲
-game = new GomokuGame(15);
-let player = 0;    //預設不存在，看伺服器後決定黑或白
-let winner = 0;
+let player = 0;    // 預設不存在，看伺服器後決定黑或白
+let winner = 2;    // 由伺服器運算，-1先手勝, 0平手, 1後手勝, 2進行中, 3未完賽
 
 // 假設這是遊戲的棋盤矩陣
-let board = game.board;
+board = Array.from({ length: 15 }, () => Array(15).fill(0));
 const offset = 25;   //棋盤從50,50開始繪製
 const gap = 50; // 每個格子的大小
 const len = gap * (board[0].length-1);
@@ -47,28 +45,24 @@ ws.onmessage = (event) => {
         }
 
         if (parsedData.Board != null) {
-            game.board = parsedData.Board;
-            drawBoard(ctx, canvas, GID, game.board, offset, gap, radius,len);
+            board = parsedData.Board;
+            drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
             return;
         }
 
         if (parsedData.action === "allow") {
             is_myTurn = true;
-            displayMessage(`[System]`, "Server", "You have permission to send coordinates!");
+            displayMessage(`[System] `, "Server: ", "You have permission to send coordinates!");
             return;
         }
-        //顯示座標於聊天框中
-        if (parsedData.x !== undefined && parsedData.y !== undefined) {
-            const { x, y, sender } = parsedData;
-            displayMessage(`[Canvas]`, sender, `Mouse clicked at (${x}, ${y})`);
-            return;
-        }
-
         if (parsedData.color != null) {
             player = parsedData.color;
             return;
         }
-
+        if (parsedData.Winner != null) {
+            winner = parsedData.Winner;
+            return;
+        }
 
     } catch (e) {
         // 非 JSON 資料則繼續處理為普通訊息
@@ -78,12 +72,12 @@ ws.onmessage = (event) => {
     const [rawTimestamp, sender, ...contentParts] = message.split(" ");
     const timestamp = rawTimestamp.replace("[", "").replace("]", "");
     const content = contentParts.join(" ");
-    displayMessage(`[${timestamp}]`, sender, content);
+    displayMessage(`[${timestamp}] `, `${sender} `, content);
 };
 
 // 在畫布上按下滑鼠左鍵時傳送座標
 canvas.addEventListener("mousedown", (event) => {
-    if (winner != 0) {
+    if (winner != 2) {
         alert(`Game over! Winner is ${winner}  No more moves are allowed.`);
         return;
     }
@@ -98,30 +92,20 @@ canvas.addEventListener("mousedown", (event) => {
         //將精準座標轉換為棋盤座標x:
         const r = Math.round((y - offset) / gap);
         const c = Math.round((x - offset) / gap);
-        
-        if (game.isValid(r,c)) {
-            game.board[r][c] = player;
-            winner = game.isWin();
-            
-            if (ws.readyState === WebSocket.OPEN) {
-                if (winner != 0) {
-                    ws.send(JSON.stringify({Winner: winner })); // 傳送勝利玩家
-                }
-                ws.send(JSON.stringify({ board: game.board })); // 傳送棋盤資料
-                is_myTurn = false;
-            } else {
-                console.error("WebSocket 尚未連線，無法傳送資料");
+        if (ws.readyState === WebSocket.OPEN) {
+            if (winner != 2) {
+                ws.send(JSON.stringify({Winner: winner })); // 傳送結束條件
             }
-        }
-        else {
-            alert("Invalid Move!")
+            ws.send(JSON.stringify({player: player, row: r, col: c})); // 傳送座標點擊資料
+            is_myTurn = false;
+        } else {
+            console.error("WebSocket 尚未連線，無法傳送資料");
         }
     }
 });
 
 // 顯示訊息的輔助函式
 function displayMessage(timestamp, sender, content) {
-    console.log(winner)
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
 
@@ -146,4 +130,4 @@ function displayMessage(timestamp, sender, content) {
 }
 
 // 初次加載時繪製棋盤
-drawBoard(ctx, canvas, GID, game.board, offset, gap, radius,len);
+drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
