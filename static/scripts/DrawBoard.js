@@ -38,6 +38,15 @@ function drawWhite(x,y){
     ctx.fill();
 }
 
+function drawValid(x, y) {
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]); // 設置虛線樣式，5px 寬的線段和 5px 的間隔
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = "black"; // 設置描邊顏色，可以根據需求改變顏色
+    ctx.stroke(); // 繪製圓的描邊
+    ctx.setLineDash([]); // 重置虛線樣式，恢復為實線
+}
+
 function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
     console.log(GID)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -72,6 +81,10 @@ function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
                 else if(board[i][j]===1)
                 {
                     drawWhite(x,y);
+                }
+                else if(board[i][j]===2)
+                {
+                    drawValid(x,y)
                 }
             }
         }

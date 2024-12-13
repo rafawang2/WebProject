@@ -7,22 +7,85 @@ let player = 0;    // 預設不存在，看伺服器後決定黑或白
 let winner = 2;    // 由伺服器運算，-1先手勝, 0平手, 1後手勝, 2進行中, 3未完賽
 
 // 假設這是遊戲的棋盤矩陣
-board = Array.from({ length: 15 }, () => Array(15).fill(0));
-const offset = 25;   //棋盤從50,50開始繪製
-const gap = 50; // 每個格子的大小
-const len = gap * (board[0].length-1);
-const radius = 15
+// 固定繪製參數
+let offset = 30;   //棋盤從30,30開始繪製
+let len = 400;
 canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
-ctx.strokeStyle = "#2894FF";  // 設置線條顏色為黑色
-ctx.lineWidth = 2;         // 設置線條寬度
+ctx.strokeStyle = "black";  // 設置線條顏色為黑色
+ctx.lineWidth = 3;         // 設置線條寬度
+
+
+// 非固定繪製參數
+let board = Array.from({ length: 15 }, () => Array(15).fill(0));
+let gap = 0; // 每個格子的大小
+let radius = 0;
+
+// 連接到 WebSocket 伺服器
+let ws = null;
+// const ws = new WebSocket("ws://10.106.38.184:8765");
+
+function initReplayBoard() 
+{
+    if (GID === "1")
+    {
+        ws = new WebSocket("ws://localhost:8764");
+        console.log("圍棋!!!");
+        board = Array.from({ length: 19 }, () => Array(19).fill(0));
+        gap = len/(board[0].length-1); // 每個格子的大小
+        radius = 10;
+    }// 這裡應該是選擇所有的 img 元素
+    else if (GID === "3")
+    {
+        ws = new WebSocket("ws://localhost:8766");
+        console.log("黑白棋!!!");
+        board = Array.from({ length: 10 }, () => Array(10).fill(0));
+        board[5][5] = 1;
+        board[4][4] = 1;
+        board[4][5] = -1;
+        board[5][4] = -1;
+        gap = len/(board[0].length); // 每個格子的大小
+        radius = 10;
+    }
+    else if (GID === "2")
+    {
+        ws = new WebSocket("ws://localhost:8765");
+        console.log("五子棋!!!");
+        board = Array.from({ length: 15 }, () => Array(15).fill(0));
+        gap = len/(board[0].length-1); // 每個格子的大小
+        radius = 10;
+        console.log(`gap of gomoku: ${gap}`)
+    }
+    else if(GID === "4")
+    {
+        ws = new WebSocket("ws://localhost:8767");
+        console.log("點格棋!!!");
+        radius = gap/4;
+        board = [
+            [5, 0, 5, 0, 5, 0, 5, 0, 5],
+            [0, 8, 0, 8, 0, 8, 0, 8, 0],
+            [5, 0, 5, 0, 5, 0, 5, 0, 5],
+            [0, 8, 0, 8, 0, 8, 0, 8, 0],
+            [5, 0, 5, 0, 5, 0, 5, 0, 5],
+            [0, 8, 0, 8, 0, 8, 0, 8, 0],
+            [5, 0, 5, 0, 5, 0, 5, 0, 5],
+            [0, 8, 0, 8, 0, 8, 0, 8, 0],
+            [5, 0, 5, 0, 5, 0, 5, 0, 5]
+        ];
+        radius = 10;
+        gap = (len-2*offset)/(board[0].length-1); // 每個格子的大小
+        console.log(`gap of dab: ${gap}`)
+        console.log(board);
+    }
+    // 用來遍歷所有的圖片元素並修改其寬度
+}
+
+// 初次加載時繪製棋盤
+initReplayBoard()
+drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
 
 // 回合
 let is_myTurn = false;
-
-// 連接到 WebSocket 伺服器
-const ws = new WebSocket("ws://localhost:8765");
-// const ws = new WebSocket("ws://10.106.38.184:8765");
 
 // 初始連線時輸入用戶名稱
 let username = sessionStorage.getItem("user_name");
@@ -33,11 +96,19 @@ ws.onopen = () => {
     ws.send(username); // 傳送用戶名稱到伺服器
 };
 
+let valids = null;
+
 // 接收來自伺服器的訊息並顯示
 ws.onmessage = (event) => {
     const message = event.data;
     try {
         const parsedData = JSON.parse(message);
+
+        if (parsedData.valids != null) {
+            valids = parsedData.valids;
+            console.log(parsedData);
+            return;
+        }
 
         if (parsedData.Winner != null) {    //伺服器廣播給所有user的勝者資料
             winner = parsedData.Winner;
@@ -46,6 +117,11 @@ ws.onmessage = (event) => {
 
         if (parsedData.Board != null) {
             board = parsedData.Board;
+            if (is_myTurn) {
+                valids.forEach(([row, col]) => {
+                    board[row][col] = 2;
+                });    
+            }
             drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);
             return;
         }
@@ -88,10 +164,17 @@ canvas.addEventListener("mousedown", (event) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
-
+        let r = -1;
+        let c = -1;
         //將精準座標轉換為棋盤座標x:
-        const r = Math.round((y - offset) / gap);
-        const c = Math.round((x - offset) / gap);
+        if (GID === "1" || GID === "2") {
+            r = Math.round((y - offset) / gap);
+            c = Math.round((x - offset) / gap);
+        }
+        else {
+            r = Math.floor((y - offset) / gap);
+            c = Math.floor((x - offset) / gap);
+        }
         if (ws.readyState === WebSocket.OPEN) {
             if (winner != 2) {
                 ws.send(JSON.stringify({Winner: winner })); // 傳送結束條件
@@ -128,6 +211,3 @@ function displayMessage(timestamp, sender, content) {
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight; // 滾動到底部
 }
-
-// 初次加載時繪製棋盤
-drawBoard(ctx, canvas, GID, board, offset, gap, radius,len);

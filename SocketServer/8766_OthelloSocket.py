@@ -3,13 +3,13 @@ import websockets
 from websockets.asyncio.server import serve
 from datetime import datetime
 import json, os
-from Gomoku import Gomoku_game
+from GameLogics.OthelloGame import OthelloGame
 
 # 保存所有已連線的用戶
 connected_users = {}    #用socket編號當作索引key
 permission_queue = []  # 用於管理權限轉移
 
-game = Gomoku_game(15)
+game = OthelloGame(10)
 game_status = 2 # 遊戲正在進行
 
 async def chat_handler(websocket):
@@ -23,7 +23,7 @@ async def chat_handler(websocket):
     join_message = f"{username} has joined the chat!"
     await broadcast(format_message("Server", join_message))
 
-    board_data = {"Board": [[0 for _ in range(15)] for _ in range(15)]}
+    board_data = {"Board": game.board}
 
     # 若加入的用戶少於兩人，則將其加入權限轉移隊列
     if websocket not in permission_queue and len(permission_queue) < 2:
@@ -35,24 +35,33 @@ async def chat_handler(websocket):
     if len(permission_queue) >= 2:
         await permission_queue[0].send(json.dumps({"color": -1})) #第一位進入執黑
         await permission_queue[1].send(json.dumps({"color": 1}))  #第二位進入執白
+        await permission_queue[0].send(json.dumps({"action": "allow"}))
 
+        # 先送給黑方可走步
+        black_valids = game.getValidMoves(-1)
+        black_valids_data = {
+            "valids": black_valids,
+            "color": -1
+        }
+        await permission_queue[0].send(json.dumps(black_valids_data))
+    await broadcast(json.dumps(board_data))  # 將資料轉為 JSON 字串
 
     try:
         while True:
             message = await websocket.recv()
-            #前端回傳game_board: {"board": [[]]} or winner: {"Winner": (-1 or 1)}
 
             if websocket in permission_queue and websocket == permission_queue[0]:
                 # 用戶擁有權限，可以傳送座標
                 try:
-                    data = json.loads(message)    
+                    data = json.loads(message)   
                     if "player" in data and "row" in data and "row" in data: # 回傳資料為用戶按下的座標
+                        print(data)
                         socket_player = data["player"]  # 確認當前走棋玩家
                         r = data["row"]
                         c = data["col"]
                         if game.is_valid(r, c):
                             game.make_move(r, c, data["player"])
-                            game.log_move(game.board,data["player"],r,c)
+                            game.log_move(game.board,data["player"],r,c)                            
                         else:
                             await websocket.send(format_message("Server", "Invalid Move!"))
                             await permission_queue[0].send(json.dumps({"action": "allow"}))
@@ -60,10 +69,15 @@ async def chat_handler(websocket):
                         board_data = {
                             "Board": game.board,  # 使用鍵名 Board 傳遞棋盤給前端用戶
                         }
+                        valids = game.getValidMoves(game.current_player)
+                        valids_data = {
+                            "valids": valids,
+                            "color": game.current_player
+                        }
                         if socket_player != game.current_player:    # 如果不一樣就代表遊戲規則判定換人(定義於make_move函數中)
                             # 權限轉移邏輯
                             permission_queue.append(permission_queue.pop(0))                    
-
+                        await permission_queue[0].send(json.dumps(valids_data))
                         await permission_queue[0].send(json.dumps({"action": "allow"}))
                         await broadcast(json.dumps(board_data))  # 將資料轉為 JSON 字串
                         
@@ -96,6 +110,7 @@ async def chat_handler(websocket):
             await broadcast(broadcast_message)
 
     except websockets.ConnectionClosed:
+        
         pass
     finally:
         # 當用戶斷線時移除並廣播消息
@@ -135,8 +150,8 @@ def format_message(sender, message):
 
 async def main():
     print("WebSocket 伺服器啟動，等待用戶端連線...")
-    # async with serve(chat_handler, "10.106.38.184", 8765) as server:
-    async with serve(chat_handler, "localhost", 8765) as server:
+    # async with serve(chat_handler, "10.106.38.184", 8766) as server:
+    async with serve(chat_handler, "localhost", 8766) as server:
         await server.serve_forever()
 
 if __name__ == "__main__":

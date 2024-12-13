@@ -72,7 +72,6 @@ class Gomoku_game():
         
         return 2 # 遊戲繼續
     
-    
     def log_move(self, board, player, row, col):
         """Logs a move with its step, coordinates, and player."""
         self.move_log.append({
@@ -84,11 +83,7 @@ class Gomoku_game():
         })
         self.step_cnt += 1
     
-    # def save_log_to_json(self, filename="static/Log/test_log.json"):
-    #     """Saves the move log to a JSON file."""
-    #     with open(filename, "w") as file:
-    #         json.dump({"steps": self.move_log}, file, indent=4)
-    def save_log_to_json(self, filename="Log/test_log.json"):
+    def save_log_to_json(self, filename="Log/test_Gomoku_log.json"):
         """Saves the move log to a JSON file."""
         # 確保基於當前檔案的路徑
         base_dir = os.path.dirname(os.path.abspath(__file__))  # 當前檔案所在目錄
@@ -122,8 +117,3 @@ class Gomoku_game():
     def make_move(self, r, c, player):
         self.board[r][c] = player
         self.current_player *= -1 # 換玩家
-        
-
-        
-# game = Gomoku_game(15)
-# game.play()
