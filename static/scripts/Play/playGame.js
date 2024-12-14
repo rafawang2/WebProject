@@ -1,5 +1,6 @@
 const chatBox = document.getElementById("chat-box");
 const canvas = document.getElementById("board");
+const detail_container = document.getElementById("detail_container");
 const ctx = canvas.getContext("2d");
 const GID = document.getElementById("hiddenGID").value; //str
 
@@ -12,8 +13,17 @@ let offset = 30;   //棋盤從30,30開始繪製
 let len = 400;
 canvas.width = len + offset*2;  // 設置畫布寬度
 canvas.height = len + offset*2; // 設置畫布高度
+
+// 設置外觀限制（CSS 样式）
+canvas.style.maxWidth = (len + offset * 2) + 'px';  // 最大寬度，單位：px
+canvas.style.maxHeight = (len + offset * 2) + 'px'; // 最大高度，單位：px
+
+// 限制 detail_container 尺寸
+detail_container.style.maxWidth = (len + offset * 2) + 'px';
+detail_container.style.maxHeight = (len + offset * 2) + 'px';
 ctx.strokeStyle = "black";  // 設置線條顏色為黑色
 ctx.lineWidth = 3;         // 設置線條寬度
+
 
 
 // 非固定繪製參數

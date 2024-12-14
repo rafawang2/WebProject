@@ -1,0 +1,41 @@
+/* Message Content */
+#chat-box {
+    margin-top: 30px;
+    width: 90%;
+    max-height: 80%;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+    padding: 5px;
+    
+    /* 隱藏滾動條 */
+    scrollbar-width: none; /* 適用於 Firefox */
+    -ms-overflow-style: none; /* 適用於 IE 和 Edge */
+  }
+  
+  #chat-box::-webkit-scrollbar {
+    display: none; /* 適用於 Chrome、Safari 和 Edge */
+  }
+  
+  #message {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .message {
+    margin: 5px 0;
+  }
+  
+  .timestamp {
+    background-color: rgb(80, 80, 80);
+    color: rgb(255, 251, 251);
+    font-size: 0.9em;
+    margin-right: 5px;
+  }
+  .sender {
+    font-weight: bold;
+    color: #000000;
+  }
+  .content {
+    margin-left: 5px;
+  }

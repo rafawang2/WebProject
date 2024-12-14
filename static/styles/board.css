@@ -1,0 +1,33 @@
+#game {
+    /* border: 2px wheat solid; */
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    padding: 25px;
+    border-radius: 50px;
+}
+
+#detail_container {
+  border: black solid 5px;
+  background-color: green;
+  text-align: center;
+}
+
+#detail_container #replay_control {
+  position: relative;
+  margin-top: 75%;
+}
+
+body
+{
+    color: wheat;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box ;
+    margin: 0;
+    padding: 0;
+}
+
+#board {
+    border: 5px black solid;
+    background: radial-gradient(ellipse at center, rgba(255,175,75,1) 0%,rgba(255,146,10,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}

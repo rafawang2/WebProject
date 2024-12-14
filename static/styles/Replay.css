@@ -1,0 +1,45 @@
+/* <select> styles */
+#speed_selector_container {
+    /* position: relative; */
+    display: block;
+    max-width: 400px;
+    min-width: 180px;
+    margin: 0 auto;
+    border: 1px solid #3C1C78;
+    border-radius: 20px;
+    background-color: #16013E;
+    z-index: 10;
+    padding: 5px;
+  }
+    
+  select{
+      text-align: center;
+      border: none;
+      outline: none;
+      background: transparent;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      margin: 0;
+      display: block;
+      width: 100%;
+      font-size: 14px;
+      color: #714BB9;
+  }
+
+
+/* 圖片按鈕 */
+.button-container {
+    display: inline-flex; /* 使用 flex 布局讓圖標保持在同一行 */
+    justify-content: center; /* 圖標水平居中 */
+    margin-top: 25px; /* 與棋盤的間距 */
+}
+
+.button-container img {
+    cursor: pointer; /* 鼠標移到圖片上時變為手型 */
+    margin: 0px 25px 0px 25px; /* 調整左右圖片的間距 */
+    border: white 2px solid;
+    border-radius: 30px;
+    background-color: wheat;
+}

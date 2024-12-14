@@ -31,11 +31,11 @@ class OthelloGame():
         })
         self.step_cnt += 1
     
-    def save_log_to_json(self, filename="Log/test_Othello_log.json"):
+    def save_log_to_json(self, filename="static/Log/test_Othello_log.json"):
         """Saves the move log to a JSON file."""
         # 確保基於當前檔案的路徑
         base_dir = os.path.dirname(os.path.abspath(__file__))  # 當前檔案所在目錄
-        full_path = os.path.join(base_dir, "static", filename)  # 靜態資料夾完整路徑
+        full_path = os.path.join(base_dir, "", filename)  # 靜態資料夾完整路徑
         directory = os.path.dirname(full_path)
 
         try:
