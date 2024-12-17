@@ -45,31 +45,11 @@ async function loadHTML() {
 document.addEventListener("DOMContentLoaded", function () {
     const userNameKey = "user_name"; // 儲存使用者名字的欄位
     let userName = sessionStorage.getItem(userNameKey);
-
+    console.log(`${userName}`)
     if (!userName) {
-        // 如果 session 並未儲存過名字
-        userName = prompt("請輸入您的名字：");
-        if (userName) {
-            sessionStorage.setItem(userNameKey, userName); // 儲存到 Session Storage
-            saveNameToServer(userName); // 發送給伺服器
-        }
+        window.location.href = '/login';
     }
-
-    loadHTML();
+    else {
+        loadHTML();
+    }
 });
-
-// 将用户名称发送到服务器
-function saveNameToServer(name) {
-    fetch('/save_name/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (!data.success) {
-            console.error('无法保存用户名称到服务器：', data.error);
-        }
-    })
-    .catch(error => console.error('发送名称到服务器时出错：', error));
-}

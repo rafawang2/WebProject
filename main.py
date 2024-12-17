@@ -16,9 +16,14 @@ templates = Jinja2Templates(directory="templates")
 
 #根目錄，導向首頁
 @app.get("/",response_class=HTMLResponse)
-async def gotohome(request: Request):
-    # 導向到 /home
-    return RedirectResponse(url="/home")
+async def gotoLogin(request: Request):
+    # 導向到 /login
+    return RedirectResponse(url="/login")
+
+@app.get("/login",response_class=HTMLResponse)
+async def loginPage(request: Request):
+    return templates.TemplateResponse("login.html",{"request": request , "time": current_time})
+
 
 #首頁，渲染首頁畫面(Home.html)
 @app.get("/home",response_class=HTMLResponse)
