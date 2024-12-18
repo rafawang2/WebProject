@@ -110,6 +110,10 @@ canvas.addEventListener("click", (event) =>
 {
     if (!is_myTurn)
         return;
+    if (winner!=2) {
+        alert("遊戲結束了!")
+        return;
+    }
     if ( currentRoom ) 
     {
         if (event.button === 0) { // 左鍵
@@ -183,6 +187,10 @@ ws.onmessage = (event) => {
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
 
+    if (data.action === "get_result") {
+        winner = data["result"];
+        return;
+    }
 
     if (data.action === "get_valids") {
         valids = data["valids"]
@@ -190,6 +198,8 @@ ws.onmessage = (event) => {
     }
 
     if (data.action === "get_location") {
+        if (winner != 2)
+            return;
         Permission = true;
         is_myTurn = true;
         messageElement.textContent = `[${data.timestamp}] ${data.sender}: ${data.message}`;

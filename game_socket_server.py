@@ -65,6 +65,7 @@ async def chat_handler(websocket):
                         "board": [],
                         "message":[],
                         "game": game_classes.get(GID, lambda: None)(),  # 默認為 None
+                        "winner": 2 # 遊戲進行中
                     }              
                     rooms[GID][room_id]["users"].append((websocket, username))
                     current_room = room_id
@@ -152,12 +153,13 @@ async def chat_handler(websocket):
                     "Row": r,
                     "Col": c
                 }
-                if room_id in rooms[GID]:
+                if room_id in rooms[GID] and rooms[GID][room_id]["winner"] == 2:
                     game = rooms[GID][room_id]["game"]
                     swap = False
                     if game.is_valid(r,c):
                         last_player = game.current_player
-                        game.make_move(r,c,game.current_player)
+                        game.make_move(r,c,game.current_player) # 落子
+                                                
                         await broadcast_board_in_room(GID, room_id, game.board)
                         if last_player == game.current_player:  # 代表沒有換人
                             swap = False
@@ -167,7 +169,22 @@ async def chat_handler(websocket):
                         rooms[GID][room_id]["board"].append(formatted_message)
                         await broadcast_in_room(GID, room_id, formatted_message)
 
-                        
+                        winner = game.is_win()
+                        rooms[GID][room_id]["winner"] = winner
+                        if winner != 2:
+                            result_data= {
+                                        "action": "get_result",
+                                        "result": winner
+                            }
+                            await broadcast_in_room(GID, room_id, json.dumps(result_data))
+                            if winner == -1:
+                                formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][0]}")
+                            elif winner == 0:
+                                formatted_message =  format_message("Server","display_message", "遊戲結束! 結果為平手")
+                            elif winner == 1:
+                                formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][1]}")
+                            await broadcast_in_room(GID, room_id, formatted_message)
+
                         # 換人邏輯
                         if swap:
                             permission_holder_idx = fighting_users[GID][room_id][2]
