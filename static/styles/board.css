@@ -1,10 +1,17 @@
 #game {
-    /* border: 2px wheat solid; */
-    justify-content: center;
-    display: flex;
-    flex-direction: row;
-    padding: 25px;
-    border-radius: 50px;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* 确保垂直对齐 */
+  gap: 20px; /* 控制两者之间的间距 */
+  padding: 25px;
+  border-radius: 50px;
+}
+
+#board {
+  border: 5px black solid;
+  background: radial-gradient(ellipse at center, rgba(255,175,75,1) 0%,rgba(255,146,10,1) 100%);
+  flex-shrink: 0; /* 防止在容器内压缩 */
 }
 
 #detail_container {
@@ -25,9 +32,4 @@ body
     box-sizing: border-box ;
     margin: 0;
     padding: 0;
-}
-
-#board {
-    border: 5px black solid;
-    background: radial-gradient(ellipse at center, rgba(255,175,75,1) 0%,rgba(255,146,10,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }

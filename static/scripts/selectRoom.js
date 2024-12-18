@@ -1,8 +1,6 @@
 const messageInput = document.getElementById("message");
 const sendButton = document.getElementById("send-button");
 const chatBox = document.getElementById("chat-box");
-const USER = document.getElementById("displayUsername");
-const ROOMID = document.getElementById("displayRoomId");
 let username = null;
 
 let exist_rooms = roomIds;
@@ -57,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function() {
             sessionStorage.setItem(userNameKey, username); // 儲存到 Session Storage
         }
     }
-    USER.textContent = username;
 
     if(exist_rooms.length)
         show_room(exist_rooms)

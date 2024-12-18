@@ -1,10 +1,16 @@
 const ws = new WebSocket("ws://localhost:8765");
 const chatBox = document.getElementById("chat-box");
-const USER = document.getElementById("displayUsername")
-const ROOMID = document.getElementById("displayRoomId")
+// const USER = document.getElementById("displayUsername")
+// const ROOMID = document.getElementById("displayRoomId")
 const userNameKey = "user_name"; // 儲存使用者名字的欄位
 username = sessionStorage.getItem(userNameKey);
-USER.textContent = username
+// USER.textContent = username
+
+
+chatBox.width = len + offset*2;  // 設置畫布寬度
+chatBox.height = len + offset*2; // 設置畫布高度
+chatBox.style.maxWidth = (len + offset * 2) + 'px';
+chatBox.style.maxHeight = (len + offset * 2) + 'px';
 
 let player = 0;    // 預設不存在，看伺服器後決定黑或白
 let winner = 2;    // 由伺服器運算，-1先手勝, 0平手, 1後手勝, 2進行中, 3未完賽
@@ -173,7 +179,10 @@ let Permission = false;
 // 接收訊息
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
+
     const messageElement = document.createElement("div");
+    messageElement.classList.add("message");
+
 
     if (data.action === "get_valids") {
         valids = data["valids"]

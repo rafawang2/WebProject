@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chat Room</title>
-    <link rel="stylesheet" href="/static/styles/style.css?v={{ time }}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>棋類對局平台</title>
+    <link rel="stylesheet" href="/static/styles/main.css?v={{ time }}">
     <link rel="stylesheet" href="/static/styles/board.css?v={{ time }}}">
     <link rel="stylesheet" href="/static/styles/Play.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/navbar.css?v={{ time }}">
+    <link rel="icon" href="/static/images/tools/chess.png" type="image/x-icon">
 </head>
 <body>
-    <h1>分房聊天室</h1>
-    <h3>Username: <span id="displayUsername">N/A</span> 
-    Room ID: <span id="displayRoomId">{{ room_id }}</span></h3>
-
-    <h3>Game Board</h3>
+    <div id="nav"></div>
     <div id="game">
         <canvas id="board"></canvas>
         <div id="chat-box"></div>
-        <div id="detail_container">
-            <div id="chat-box"></div>
-        </div>
     </div>
-    
+    <script src="/static/scripts/nav.js?v={{ time }}"></script>
     <script>
         // Pass the room_ids from Python to JavaScript
         let currentRoom = {{ room_id | tojson }};
@@ -30,7 +27,7 @@
         // 固定繪製參數
         const canvas = document.getElementById("board");
         const ctx = canvas.getContext("2d");
-        const detail_container = document.getElementById("detail_container");
+        // const detail_container = document.getElementById("detail_container");
 
         let offset = 30;   //棋盤從30,30開始繪製
         let len = 400;
@@ -42,8 +39,8 @@
         canvas.style.maxHeight = (len + offset * 2) + 'px'; // 最大高度，單位：px
 
         // 限制 detail_container 尺寸
-        detail_container.style.maxWidth = (len + offset * 2) + 'px';
-        detail_container.style.maxHeight = (len + offset * 2) + 'px';
+        // detail_container.style.maxWidth = (len + offset * 2) + 'px';
+        // detail_container.style.maxHeight = (len + offset * 2) + 'px';
         ctx.strokeStyle = "black";  // 設置線條顏色為黑色
         ctx.lineWidth = 3;         // 設置線條寬度
 

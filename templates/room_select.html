@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Chat Room</title>
-    <link rel="stylesheet" href="/static/styles/style.css?v={{ time }}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>棋類對局平台</title>
+    <link rel="stylesheet" href="/static/styles/main.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/SelectRoom.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/navbar.css?v={{ time }}">
+    <link rel="icon" href="/static/images/tools/chess.png" type="image/x-icon">
 </head>
 <body>
-    <h1>分房聊天室</h1>
-    <h3>Username: <span id="displayUsername">N/A</span></h3>
+    <div id="nav"></div>
 
-    <div id="controls">
-        <input type="text" id="room-id" placeholder="Enter Room ID">
-        <button onclick="createRoom(document.getElementById('room-id').value)">Create Room</button>
-        <button onclick="search_room(document.getElementById('room-id').value)">Search Room</button>
+    <div class="all-container">
+        <div id="controls">
+            <input type="text" id="room-id" placeholder="Enter Room ID">
+            <button onclick="createRoom(document.getElementById('room-id').value)">Create Room</button>
+            <button onclick="search_room(document.getElementById('room-id').value)">Search Room</button>
+        </div>
+        
+        <div id="exist-room"></div>
     </div>
-    <div id="chat-box"></div>
-    
-    <div id="exist-room"></div>
 
+    <script src="/static/scripts/nav.js?v={{ time }}"></script>
     <script>
         // Pass the room_ids from Python to JavaScript
         const roomIds = {{ room_ids | tojson }};
         const GID = {{ GID | tojson }}
         exist_rooms = roomIds;
     </script>
-
     <script src="/static/scripts/selectRoom.js?v={{ time }}"></script>
 </body>
 </html>
