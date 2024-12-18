@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat Room</title>
+    <link rel="stylesheet" href="/static/styles/style.css?v={{ time }}">
+</head>
+<body>
+    <h1>分房聊天室</h1>
+    <h3>Username: <span id="displayUsername">N/A</span></h3>
+
+    <div id="controls">
+        <input type="text" id="room-id" placeholder="Enter Room ID">
+        <button onclick="createRoom(document.getElementById('room-id').value)">Create Room</button>
+        <button onclick="search_room(document.getElementById('room-id').value)">Search Room</button>
+    </div>
+    <div id="chat-box"></div>
+    
+    <div id="exist-room"></div>
+
+    <script>
+        // Pass the room_ids from Python to JavaScript
+        const roomIds = {{ room_ids | tojson }};
+        const GID = {{ GID | tojson }}
+        exist_rooms = roomIds;
+    </script>
+
+    <script src="/static/scripts/selectRoom.js?v={{ time }}"></script>
+</body>
+</html>

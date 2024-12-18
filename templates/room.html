@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat Room</title>
+    <link rel="stylesheet" href="/static/styles/style.css?v={{ time }}">
+    <link rel="stylesheet" href="/static/styles/board.css?v={{ time }}}">
+    <link rel="stylesheet" href="/static/styles/Play.css?v={{ time }}">
+</head>
+<body>
+    <h1>分房聊天室</h1>
+    <h3>Username: <span id="displayUsername">N/A</span> 
+    Room ID: <span id="displayRoomId">{{ room_id }}</span></h3>
+
+    <h3>Game Board</h3>
+    <div id="game">
+        <canvas id="board"></canvas>
+        <div id="chat-box"></div>
+        <div id="detail_container">
+            <div id="chat-box"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Pass the room_ids from Python to JavaScript
+        let currentRoom = {{ room_id | tojson }};
+        const GID = {{ GID | tojson }};; //五子棋
+
+        // 固定繪製參數
+        const canvas = document.getElementById("board");
+        const ctx = canvas.getContext("2d");
+        const detail_container = document.getElementById("detail_container");
+
+        let offset = 30;   //棋盤從30,30開始繪製
+        let len = 400;
+        canvas.width = len + offset*2;  // 設置畫布寬度
+        canvas.height = len + offset*2; // 設置畫布高度
+
+        // 設置外觀限制（CSS 样式）
+        canvas.style.maxWidth = (len + offset * 2) + 'px';  // 最大寬度，單位：px
+        canvas.style.maxHeight = (len + offset * 2) + 'px'; // 最大高度，單位：px
+
+        // 限制 detail_container 尺寸
+        detail_container.style.maxWidth = (len + offset * 2) + 'px';
+        detail_container.style.maxHeight = (len + offset * 2) + 'px';
+        ctx.strokeStyle = "black";  // 設置線條顏色為黑色
+        ctx.lineWidth = 3;         // 設置線條寬度
+
+        // 非固定繪製參數
+        let gap = 0; // 每個格子的大小
+        let radius = 0;
+
+    </script>
+    <script src="/static/scripts/DrawBoard.js?v={{ time }}"></script>
+    <script src="/static/scripts/Room.js?v={{ time }}"></script>
+</body>
+</html>

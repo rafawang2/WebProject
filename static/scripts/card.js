@@ -52,19 +52,19 @@ buttons.forEach((button) =>
         switch (button.id) 
         {
             case '1':
-                window.location.href = '/playGame?GID=1';
+                window.location.href = '/selectRoom?GID=1';
                 break;
 
             case '2':
-                window.location.href = '/playGame?GID=2';
+                window.location.href = '/selectRoom?GID=2';
                 break;
 
             case '3':
-                window.location.href = '/playGame?GID=3';
+                window.location.href = '/selectRoom?GID=3';
                 break;
 
             case '4':
-                window.location.href = '/playGame?GID=4';
+                window.location.href = '/selectRoom?GID=4';
                 break;
 
             default:

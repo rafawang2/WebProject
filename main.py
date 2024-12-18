@@ -101,6 +101,62 @@ async def save_name(request: NameRequest):
     except Exception as e:
         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
+
+exist_rooms = {
+    1: [],
+    2: [],
+    3: [],
+    4: []
+}
+
+# /selectRoom?GID={GID}
+@app.get("/selectRoom", response_class=HTMLResponse)
+async def SelectRoom(request: Request, GID: int):
+    return templates.TemplateResponse("room_select.html", {"request": request,
+                                                           "time": current_time,
+                                                           "room_ids": exist_rooms[GID],
+                                                           "GID": str(GID)
+                                                           })
+# 創建房間的API
+# /create_room
+@app.post("/create_room")
+async def create_room(request: Request):
+    room_id = request.headers.get("room_id")
+    GID = int(request.headers.get("GID"))
+    if room_id and room_id not in exist_rooms[GID]:
+        # 記錄房間的創建時間
+        exist_rooms[GID].append(room_id)
+        return {"success": True, "room_ids":exist_rooms[GID]}
+    elif room_id in exist_rooms[GID]:
+        return {"success": False, "message": "The room already exists!"}
+    else:
+        return {"success": False, "message": "room_id not provided"}
+
+# 刪除房間的API
+# /delete_room?room_id={room_id}&GID={GID}
+@app.delete("/delete_room")
+async def delete_room(room_id: str, GID: int):
+    if room_id in exist_rooms[GID]:
+        exist_rooms[GID].remove(room_id)
+        print(exist_rooms)
+        return {"success": True, "message": f"Room {room_id} has been deleted."}
+    else:
+        return {"success": False, "message": "Room not found!"}
+
+# 房間頁面
+# /room?room_id={room_id}&GID={GID}
+@app.get("/room")
+async def room_page(request: Request, room_id: str, GID: int):
+    if room_id not in exist_rooms[GID]:
+        return {"error": "Room not found!"}
+    
+    return templates.TemplateResponse("room.html", {
+        "request": request,
+        "time": current_time,
+        "room_id": room_id,
+        "GID": str(GID)
+        })
+
 # 遊戲介面
 @app.get("/playGame",response_class=HTMLResponse)
 async def replayBoard(request: Request, GID: int):  
