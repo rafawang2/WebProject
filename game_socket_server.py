@@ -54,7 +54,6 @@ async def chat_handler(websocket):
                 GID = int(data["GID"])
                 room_id = data["room_id"]
                 username = data["User"]
-                print(rooms[GID])
                 current_room = room_id
                 # 若房間號不存在，則在socket server建立關於此房間的信息
                 if room_id not in rooms[GID]:
@@ -160,7 +159,7 @@ async def chat_handler(websocket):
                     if game.is_valid(r,c):
                         last_player = game.current_player
                         game.make_move(r,c,game.current_player) # 落子
-                                                
+                        
                         await broadcast_board_in_room(GID, room_id, game.board)
                         if last_player == game.current_player:  # 代表沒有換人
                             swap = False
@@ -173,6 +172,7 @@ async def chat_handler(websocket):
                         winner = game.is_win()
                         rooms[GID][room_id]["winner"] = winner
                         if winner != 2:
+                            game.save_log_to_json("static/Log/log.json")
                             result_data= {
                                         "action": "get_result",
                                         "result": winner
@@ -230,7 +230,21 @@ async def chat_handler(websocket):
             
     except websockets.ConnectionClosed:
         print("Connection closed - except block triggered")
-        pass
+        if current_room and username:
+            print(f"{username} left")
+            rooms[GID][current_room]["users"].remove((websocket, username))
+            if not rooms[GID][current_room]["users"]:
+                if current_room in fighting_users[GID]:
+                    del fighting_users[GID][current_room]
+                # 房間內沒人時刪除房間                
+                del rooms[GID][current_room]
+                # 發送刪除房間的 DELETE 請求
+                async with aiohttp.ClientSession() as session:
+                    async with session.delete(f"http://10.106.38.184:8080/delete_room?room_id={current_room}&GID={GID}") as response:
+                        if response.status == 200:
+                            print(f"Room {current_room} successfully deleted via API")
+                        else:
+                            print(f"Failed to delete room {current_room} via API")
     
     # 斷線or異常
     finally:
@@ -244,7 +258,7 @@ async def chat_handler(websocket):
                 del rooms[GID][current_room]
                 # 發送刪除房間的 DELETE 請求
                 async with aiohttp.ClientSession() as session:
-                    async with session.delete(f"http://localhost:8080/delete_room?room_id={current_room}&GID={GID}") as response:
+                    async with session.delete(f"http://10.106.38.184:8080/delete_room?room_id={current_room}&GID={GID}") as response:
                         if response.status == 200:
                             print(f"Room {current_room} successfully deleted via API")
                         else:
@@ -275,7 +289,7 @@ def format_message(sender,action,message):
 
 async def main():
     print("WebSocket server is running...")
-    async with websockets.serve(chat_handler, "localhost", 8765):
+    async with websockets.serve(chat_handler, "10.106.38.184", 8765):
         await asyncio.Future()  # 永遠運行
 
 if __name__ == "__main__":

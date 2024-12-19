@@ -91,15 +91,15 @@ async def upload_image(image: UploadFile = File(...)):
 class NameRequest(BaseModel):
     name: str
 user_data = {"name": ""}
-# 保存使用者名稱 API
-@app.post("/save_name/")
-async def save_name(request: NameRequest):
-    try:
-        user_data["name"] = request.name  # 從請求中獲取名稱
-        print(user_data["name"])
-        return JSONResponse(content={"success": True, "name": request.name})
-    except Exception as e:
-        return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
+# # 保存使用者名稱 API
+# @app.post("/save_name")
+# async def save_name(request: NameRequest):
+#     try:
+#         user_data["name"] = request.name  # 從請求中獲取名稱
+#         print(user_data["name"])
+#         return JSONResponse(content={"success": True, "name": request.name})
+#     except Exception as e:
+#         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
 
 exist_rooms = {
@@ -167,5 +167,5 @@ async def replayBoard(request: Request, GID: int):
     })
 
 if __name__ == "__main__":
-    uvicorn.run("main:app",host="127.0.0.1",port=8080,reload=True)
-    # uvicorn.run("main:app",host="10.106.38.184",port=8080,reload=True)
+    # uvicorn.run("main:app",host="127.0.0.1",port=8080,reload=True)
+    uvicorn.run("main:app",host="10.106.38.184",port=8080,reload=True)

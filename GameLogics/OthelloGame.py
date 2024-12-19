@@ -130,6 +130,7 @@ class OthelloGame():
     def make_move(self, r, c, player = None):
         if self.is_valid(r, c):
             self.executeMove((r, c))
+            self.log_move(self.board, player, r, c)
             self.current_player=-self.current_player
         else:
             raise Exception('invalid move')

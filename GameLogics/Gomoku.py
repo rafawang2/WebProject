@@ -116,4 +116,5 @@ class Gomoku_game():
     
     def make_move(self, r, c, player):
         self.board[r][c] = player
+        self.log_move(self.board, player, r, c)
         self.current_player *= -1 # 換玩家
