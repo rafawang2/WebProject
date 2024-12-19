@@ -9,8 +9,8 @@ from GameLogics.OthelloGame import OthelloGame
 from GameLogics.Dots_and_Box import DotsAndBox
 
 # IP = "10.106.38.184"
-IP = "192.168.0.133"
-
+# IP = "192.168.0.133"
+IP = "localhost"
 # 定義一個字典，映射 GID 到對應的遊戲類別
 game_classes = {
     1: lambda: Gomoku_game(19),
@@ -266,7 +266,6 @@ async def chat_handler(websocket):
     finally:
         if current_room and username:
             print(f"{username} left")
-            
             #移除玩家
             if username in rooms[GID][current_room]["users"]:
                 rooms[GID][current_room]["users"].remove((websocket, username))
