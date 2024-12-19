@@ -86,9 +86,9 @@ class Gomoku_game():
     def save_log_to_json(self, filename="static/Log/test_Gomoku_log.json"):
         """Saves the move log to a JSON file."""
         # 確保基於當前檔案的路徑
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # 當前檔案所在目錄
-        full_path = os.path.join(base_dir, "", filename)  # 靜態資料夾完整路徑
-        directory = os.path.dirname(full_path)
+        # base_dir = os.path.dirname(os.path.abspath(__file__))  # 當前檔案所在目錄
+        # full_path = os.path.join(base_dir, "", filename)  # 靜態資料夾完整路徑
+        directory = os.path.dirname("static/Log/Gomoku_log")
 
         try:
             # 檢查目錄是否存在
@@ -97,15 +97,15 @@ class Gomoku_game():
                 print(f"Directory created: {directory}")
 
             # 存檔
-            with open(full_path, "w") as file:
+            with open(filename, "w") as file:
                 json.dump({"steps": self.move_log}, file, indent=4)
             self.move_log.clear()
 
             # 確認檔案是否正確存儲
-            if os.path.exists(full_path):
-                print(f"File saved successfully: {full_path}")
+            if os.path.exists(filename):
+                print(f"File saved successfully: {filename}")
             else:
-                print(f"Error: File not found after saving: {full_path}")
+                print(f"Error: File not found after saving: {filename}")
         except Exception as e:
             print(f"Unexpected error: {e}")
     

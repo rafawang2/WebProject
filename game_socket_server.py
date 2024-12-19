@@ -16,6 +16,13 @@ game_classes = {
     4: lambda: DotsAndBox(5,5)
 }
 
+GID_path = {
+    1: "static/Log/GO_log/",
+    2: "static/Log/Gomoku_log/",
+    3: "static/Log/Othello_log/",
+    4: "static/Log/DaB_log/"
+}
+
 # 房間資料結構
 rooms = {
     1: {},
@@ -172,7 +179,10 @@ async def chat_handler(websocket):
                         winner = game.is_win()
                         rooms[GID][room_id]["winner"] = winner
                         if winner != 2:
-                            game.save_log_to_json("static/Log/log.json")
+                            file_path = GID_path[GID]
+                            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            file_path += f"{current_time}.json"
+                            game.save_log_to_json(file_path)
                             result_data= {
                                         "action": "get_result",
                                         "result": winner
