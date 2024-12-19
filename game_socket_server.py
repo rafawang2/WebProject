@@ -6,13 +6,14 @@ from datetime import datetime
 import aiohttp  # 新增此模組以便發送 HTTP 請求
 from GameLogics.Gomoku import Gomoku_game
 from GameLogics.OthelloGame import OthelloGame
+from GameLogics.Dots_and_Box import DotsAndBox
 
 # 定義一個字典，映射 GID 到對應的遊戲類別
 game_classes = {
     1: lambda: Gomoku_game(19),
     2: lambda: Gomoku_game(15),
     3: lambda: OthelloGame(10),
-    4: lambda: OthelloGame(10),
+    4: lambda: DotsAndBox(5,5)
 }
 
 # 房間資料結構
