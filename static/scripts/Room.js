@@ -1,4 +1,6 @@
-const ws = new WebSocket("ws://10.106.38.184:8765");
+// const IP = "10.106.38.184";
+const IP = "192.168.0.133";
+const ws = new WebSocket(`ws://${IP}:8765`);
 const chatBox = document.getElementById("chat-box");
 // const USER = document.getElementById("displayUsername")
 // const ROOMID = document.getElementById("displayRoomId")

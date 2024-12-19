@@ -8,6 +8,9 @@ from GameLogics.Gomoku import Gomoku_game
 from GameLogics.OthelloGame import OthelloGame
 from GameLogics.Dots_and_Box import DotsAndBox
 
+# IP = "10.106.38.184"
+IP = "192.168.0.133"
+
 # 定義一個字典，映射 GID 到對應的遊戲類別
 game_classes = {
     1: lambda: Gomoku_game(19),
@@ -37,11 +40,11 @@ fighting_users = {
     4: {}
 }
 
-def assignPermission(rooms, holder, room_id):
-    if holder == rooms[room_id]["users"][0][1]:
-        socket = rooms[room_id]["users"][0][0]
+def assignPermission(room, holder, room_id):
+    if holder == room[room_id]["users"][0][1]:
+        socket = room[room_id]["users"][0][0]
     else:
-        socket = rooms[room_id]["users"][1][0]
+        socket = room[room_id]["users"][1][0]
     return socket
     
 
@@ -129,7 +132,7 @@ async def chat_handler(websocket):
                         permission_holder_idx = fighting_users[GID][current_room][2]
                         permission_holder = fighting_users[GID][current_room][permission_holder_idx]
                         if permission_holder == username:
-                            permission_socket = assignPermission(rooms, permission_holder, room_id)
+                            permission_socket = assignPermission(rooms[GID], permission_holder, room_id)
                             await permission_socket.send(format_message("Server","get_location","is your turn"))
                             await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                              # 如果需要，先送可走棋給前端
@@ -145,7 +148,7 @@ async def chat_handler(websocket):
 
 
                     else:   #當房間已有兩人，其餘人都設為旁觀者
-                        await broadcast_board_in_room(GID, room_id, game.board)
+                        await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         print(f"{username}作為觀戰者{room_id}")
                         rooms[GID][room_id]["visitors"].append((websocket, username))
                         await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{username}作為觀戰者加入房間{room_id}"))
@@ -240,27 +243,20 @@ async def chat_handler(websocket):
             
     except websockets.ConnectionClosed:
         print("Connection closed - except block triggered")
-        if current_room and username:
-            print(f"{username} left")
-            rooms[GID][current_room]["users"].remove((websocket, username))
-            if not rooms[GID][current_room]["users"]:
-                if current_room in fighting_users[GID]:
-                    del fighting_users[GID][current_room]
-                # 房間內沒人時刪除房間                
-                del rooms[GID][current_room]
-                # 發送刪除房間的 DELETE 請求
-                async with aiohttp.ClientSession() as session:
-                    async with session.delete(f"http://10.106.38.184:8080/delete_room?room_id={current_room}&GID={GID}") as response:
-                        if response.status == 200:
-                            print(f"Room {current_room} successfully deleted via API")
-                        else:
-                            print(f"Failed to delete room {current_room} via API")
+        pass
     
     # 斷線or異常
     finally:
         if current_room and username:
             print(f"{username} left")
-            rooms[GID][current_room]["users"].remove((websocket, username))
+            
+            #移除玩家
+            if username in rooms[GID][current_room]["users"]:
+                rooms[GID][current_room]["users"].remove((websocket, username))
+            elif username in rooms[GID][current_room]["visitors"]:
+                rooms[GID][current_room]["visitors"].remove((websocket, username))
+            
+            # 房間內對戰的玩家均離開時
             if not rooms[GID][current_room]["users"]:
                 if current_room in fighting_users[GID]:
                     del fighting_users[GID][current_room]
@@ -268,7 +264,7 @@ async def chat_handler(websocket):
                 del rooms[GID][current_room]
                 # 發送刪除房間的 DELETE 請求
                 async with aiohttp.ClientSession() as session:
-                    async with session.delete(f"http://10.106.38.184:8080/delete_room?room_id={current_room}&GID={GID}") as response:
+                    async with session.delete(f"http://{IP}:8080/delete_room?room_id={current_room}&GID={GID}") as response:
                         if response.status == 200:
                             print(f"Room {current_room} successfully deleted via API")
                         else:
@@ -278,6 +274,10 @@ async def chat_handler(websocket):
 async def broadcast_in_room(GID, room_id, message):  
     for websocket,_ in rooms[GID][room_id]["users"]:
         await websocket.send(message)
+    if rooms[GID][room_id]["visitors"]:
+        for websocket,_ in rooms[GID][room_id]["visitors"]:
+            await websocket.send(message)
+    
 
 async def broadcast_board_in_room(GID, room_id, board):
     board_data = {
@@ -287,7 +287,9 @@ async def broadcast_board_in_room(GID, room_id, board):
     
     for websocket,_ in rooms[GID][room_id]["users"]:
         await websocket.send(json.dumps(board_data))
-
+    if rooms[GID][room_id]["visitors"]:
+        for websocket,_ in rooms[GID][room_id]["visitors"]:
+            await websocket.send(json.dumps(board_data))
 # 決定先手是誰
 def first_play():
     res = random.randint(1,100) % 2
@@ -299,7 +301,7 @@ def format_message(sender,action,message):
 
 async def main():
     print("WebSocket server is running...")
-    async with websockets.serve(chat_handler, "10.106.38.184", 8765):
+    async with websockets.serve(chat_handler, IP, 8765):
         await asyncio.Future()  # 永遠運行
 
 if __name__ == "__main__":
