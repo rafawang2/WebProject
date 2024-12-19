@@ -143,6 +143,13 @@ async def chat_handler(websocket):
                         rooms[GID][room_id]["users"].append((websocket, username))
                         await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         print(f"{username}重新加入房間{room_id}，開始下棋")
+                        
+                        players_data = {
+                            "action": "get_players",
+                            "players": fighting_users[GID][room_id][:2]
+                        }
+                        await broadcast_in_room(GID, room_id, json.dumps(players_data))
+                        
                         await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{username} rejoined room {room_id}"))
                         
                         # 重新給權限
@@ -267,9 +274,9 @@ async def chat_handler(websocket):
         if current_room and username:
             print(f"{username} left")
             #移除玩家
-            if username in rooms[GID][current_room]["users"]:
+            if (websocket, username) in rooms[GID][current_room]["users"]:
                 rooms[GID][current_room]["users"].remove((websocket, username))
-            elif username in rooms[GID][current_room]["visitors"]:
+            elif (websocket, username) in rooms[GID][current_room]["visitors"]:
                 rooms[GID][current_room]["visitors"].remove((websocket, username))
             
             # 房間內對戰的玩家均離開時

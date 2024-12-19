@@ -22,6 +22,13 @@ loginButton.addEventListener("click", () => {
         alert("請輸入有效的使用者名稱！");
         return; // 不繼續執行，避免空輸入
     }
+
+    // 檢查使用者名稱是否超過10個字元
+    if (inputUserName.length > 10) {
+        alert("使用者名稱不可超過 10 個字元！");
+        return; // 不繼續執行
+    }
+
     // 將值存入 sessionStorage
     sessionStorage.setItem(userNameKey, inputUserName);
     console.log(inputUserName)

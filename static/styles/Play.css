@@ -1,6 +1,5 @@
 /* General Styling for Chat Box */
 #chat-box {
-  border: 3px rgb(255, 0, 0) solid;
   display: flex;
   flex-direction: column; /* 垂直排列 */
   align-items: center;    /* 水平置中 */
@@ -21,6 +20,7 @@
 
 #players-container {
   display: flex;
+  align-items: center;
   justify-content: space-between; /* 水平分佈 */
   width: 100%;                   /* 撐滿父容器 */
   max-width: 100%;              /* 最大寬度 */
@@ -71,15 +71,21 @@
 }
 
 h4 {
+  align-content: center;
+  height: 35px;
+  width: auto;
+  max-width: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
   font-family: 'Poppins', sans-serif;
   font-size: 24px;
-  color: #333;
+  color: #ffffff;
   text-align: center;
 }
 
 .current-player {
   color: #fff ;
-  text-shadow:
+  box-shadow:
     0 0 5px #fff,
     0 0 10px #fff,
     0 0 20px #fff,
