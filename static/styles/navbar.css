@@ -12,7 +12,6 @@ header
 {
     display: flex;
     align-items:center;
-    background-color: rgb(148, 146, 146);
     max-height: 75px;
     min-height: 75px;
     max-width: 100%;
@@ -86,15 +85,14 @@ header #link_back_container a:hover
 
 .accordion-header {
     max-height: 75px;
-    min-height: 75px;
-    color: #ffffff;
-    background: gray;
+    min-height: 75px;    
     border: none;
     text-align: left;
     padding: 5px;
     font-size: 16px;
     cursor: pointer;
     outline: none;
+    background-color: rgba(255, 255, 255, 0);
     transition: background 0.3s;
     z-index: 2;
     position: relative;
@@ -118,7 +116,7 @@ header #link_back_container a:hover
     position: absolute; /* 絕對定位，覆蓋其他內容 */
     left: 0;
     top: 100%; /* 從按鈕底部展開 */
-    background: gray;
+    background-color: rgba(255, 255, 255, 0.3);
     width: 100%;
     overflow: hidden;
     max-height: 0; /* 預設折疊 */

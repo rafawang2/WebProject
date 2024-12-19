@@ -38,7 +38,7 @@ body .container .card
   border: solid 5px transparent;
   background-clip: padding-box;
   box-shadow: 0px 10px 10px rgba(46, 54, 68, 0.03);
-  background-color: rgba(0,0,0,0.75);
+  
 }
 
 body .container .card .content 
