@@ -81,6 +81,15 @@ async def chat_handler(websocket):
                     current_room = room_id
                     rooms[GID][room_id]["status"] = 1
 
+                    # 發送對戰人員給前端
+                    players = [username, "N/A"]
+                    players_data = {
+                        "action": "get_players",
+                        "players": players
+                    }
+                    await broadcast_in_room(GID, room_id, json.dumps(players_data))
+                    
+                    #顯示版面
                     await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                     
                     print(f"{username}創建並加入{room_id}")
@@ -95,9 +104,17 @@ async def chat_handler(websocket):
                         rooms[GID][room_id]["status"] = 2
                         
                         # 已確定對戰人員
-                        fighting_users[GID][room_id] = [rooms[GID][room_id]["users"][0][1],username]
-
-                         # 先加入的人自動獲得權限
+                        players = [rooms[GID][room_id]["users"][0][1],username]
+                        fighting_users[GID][room_id] = players
+                        
+                        # 發送對戰人員給前端
+                        players_data = {
+                            "action": "get_players",
+                            "players": players
+                        }
+                        await broadcast_in_room(GID, room_id, json.dumps(players_data))
+                        
+                        # 先加入的人自動獲得權限
                         fighting_users[GID][current_room].append(0)  #fighting_users[GID][current_room][fighting_users[GID][current_room][2]]有權限
                         permission_holder_idx = fighting_users[GID][current_room][2]
                         permission_holder = fighting_users[GID][current_room][permission_holder_idx]

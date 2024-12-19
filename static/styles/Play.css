@@ -1,18 +1,36 @@
 /* General Styling for Chat Box */
 #chat-box {
-  width: 100%;
-  max-width: 600px;
-  min-height: 400px;
+  border: 3px rgb(255, 0, 0) solid;
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  align-items: center;    /* 水平置中 */
+}
+
+#message-container {
+  padding: 10px;
+  box-sizing: border-box;
   border: 2px black solid;
   background-color: rgb(125, 122, 122);
-  color: rgb(216, 191, 191);
-  padding: 15px;
-  width: 300px; /* 固定宽度，适配布局 */
-  max-height: 400px; /* 限制高度，避免超出界限 */
+  color: rgb(0, 0, 0);
+  width: 400px; /* 固定宽度，适配布局 */
   overflow-y: auto; /* 当内容超出时添加滚动条 */
   border-radius: 10px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
+}
+
+#players-container {
+  display: flex;
+  justify-content: space-between; /* 水平分佈 */
+  width: 100%;                   /* 撐滿父容器 */
+  max-width: 100%;              /* 最大寬度 */
+  border: #000000 solid 3px;
+  gap: 20px;                     /* 兩個玩家之間的間距 */
+}
+
+.player {
+  text-align: center; /* 置中對齊文字 */
+  flex: 1;            /* 平均分配寬度 */
 }
 
 /* Styling for Individual Messages */
@@ -26,56 +44,48 @@
 }
 
 .message:hover {
-  background-color: #000000;
-}
-
-.message .meta {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.message .content {
-  font-size: 1rem;
-  color: #333;
-  word-wrap: break-word;
-}
-
-/* Different Colors for Sender and Receiver */
-.message.sender {
-  align-self: flex-end;
-  background-color: #e0f7fa;
-  color: #00796b;
-}
-
-.message.receiver {
-  align-self: flex-start;
-  background-color: #e8f5e9;
-  color: #388e3c;
-}
-
-/* Timestamp Styling */
-.message .timestamp {
-  font-size: 0.75rem;
-  color: #999;
-  margin-top: 5px;
-  align-self: flex-end;
+  background-color: rgba(241, 129, 237, 0.2);
 }
 
 /* Styling for Scrollbar */
-#chat-box::-webkit-scrollbar {
+#message-container::-webkit-scrollbar {
   width: 8px;
 }
 
-#chat-box::-webkit-scrollbar-thumb {
+#message-container::-webkit-scrollbar-thumb {
   background-color: #cccccc;
   border-radius: 4px;
 }
 
-#chat-box::-webkit-scrollbar-thumb:hover {
+#message-container::-webkit-scrollbar-thumb:hover {
   background-color: #b0b0b0;
 }
 
-#chat-box::-webkit-scrollbar-track {
+#message-container::-webkit-scrollbar-track {
   background-color: #f9f9f9;
+}
+
+:root {
+  --shadow-color: #FF9E9E;
+  --shadow-color-light: white;
+}
+
+h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+.current-player {
+  color: #fff ;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px #fff,
+    0 0 40px #0ff,
+    0 0 80px #0ff,
+    0 0 90px #0ff,
+    0 0 100px #0ff,
+    0 0 150px #0ff !important;
 }

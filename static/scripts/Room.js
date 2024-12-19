@@ -2,17 +2,33 @@
 const IP = "192.168.0.133";
 const ws = new WebSocket(`ws://${IP}:8765`);
 const chatBox = document.getElementById("chat-box");
-// const USER = document.getElementById("displayUsername")
-// const ROOMID = document.getElementById("displayRoomId")
+const messageContainer = document.getElementById("message-container");
+const playerContainer = document.getElementById("players-container");
+const player1Element = document.getElementById("player1");
+const player2Element = document.getElementById("player2");
 const userNameKey = "user_name"; // 儲存使用者名字的欄位
 username = sessionStorage.getItem(userNameKey);
-// USER.textContent = username
 
+let players = null;
 
-chatBox.width = len + offset*2;  // 設置畫布寬度
-chatBox.height = len + offset*2; // 設置畫布高度
-chatBox.style.maxWidth = (len + offset * 2) + 'px';
+// 設定 chatBox 高度
+chatBox.style.minHeight = (len + offset * 2) + 'px';
 chatBox.style.maxHeight = (len + offset * 2) + 'px';
+
+// 將高度數值轉為數字
+const chatBoxHeight = len + offset * 2; // 這是數值，無需解析
+
+// 設定 messageContainer 高度
+const messageContainerHeight = chatBoxHeight * 0.85;
+messageContainer.style.minHeight = messageContainerHeight + 'px';
+messageContainer.style.maxHeight = messageContainerHeight + 'px';
+
+// 設定 playerContainer 高度
+const playerContainerHeight = chatBoxHeight * 0.15;
+playerContainer.style.minHeight = playerContainerHeight + 'px';
+playerContainer.style.maxHeight = playerContainerHeight + 'px';
+
+
 
 let player = 0;    // 預設不存在，看伺服器後決定黑或白
 let winner = 2;    // 由伺服器運算，-1先手勝, 0平手, 1後手勝, 2進行中, 3未完賽
@@ -146,9 +162,24 @@ canvas.addEventListener("click", (event) =>
                     Row: r,
                     Col: c,
                 };
-
                 ws.send(JSON.stringify(data)); // 傳送座標點擊資料
                 is_myTurn = false;
+
+                if (username === players[0]) {
+                    setTimeout(() => {
+                        // 這裡可以確保更新過後的效果
+                        player1Element.classList.remove('current-player');
+                        player2Element.classList.add('current-player');
+                    }, 0); // 延遲 0 毫秒強制重繪
+                }
+                else if(username === players[1]) {
+                    setTimeout(() => {
+                        // 這裡可以確保更新過後的效果
+                        player2Element.classList.remove('current-player');
+                        player1Element.classList.add('current-player');
+                    }, 0); // 延遲 0 毫秒強制重繪
+                }
+
             } else {
                 console.error("WebSocket 尚未連線，無法傳送資料");
             }
@@ -189,6 +220,14 @@ ws.onmessage = (event) => {
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
 
+    if (data.action === "get_players") {
+        console.log(data["players"])
+        players = data["players"];
+        player1Element.textContent = players[0];
+        player2Element.textContent = players[1];
+        return;
+    }
+
     if (data.action === "get_result") {
         winner = data["result"];
         return;
@@ -204,9 +243,25 @@ ws.onmessage = (event) => {
             return;
         Permission = true;
         is_myTurn = true;
+
+        if (username === players[0]) {
+            setTimeout(() => {
+                // 這裡可以確保更新過後的效果
+                player2Element.classList.remove('current-player');
+                player1Element.classList.add('current-player');
+            }, 0); // 延遲 0 毫秒強制重繪
+        }
+        else if(username === players[1]) {
+            setTimeout(() => {
+                // 這裡可以確保更新過後的效果
+                player1Element.classList.remove('current-player');
+                player2Element.classList.add('current-player');
+            }, 0); // 延遲 0 毫秒強制重繪
+        }
+        
         messageElement.textContent = `[${data.timestamp}] ${data.sender}: ${data.message}`;
-        chatBox.appendChild(messageElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        messageContainer.appendChild(messageElement);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
         return;
     }
 
@@ -230,6 +285,6 @@ ws.onmessage = (event) => {
     else
     // 不是的話就是一般訊息
     messageElement.textContent = `[${data.timestamp}] ${data.sender}: ${data.message}`;
-    chatBox.appendChild(messageElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    messageContainer.appendChild(messageElement);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
 };

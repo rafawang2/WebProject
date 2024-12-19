@@ -16,7 +16,13 @@
     <div id="nav"></div>
     <div id="game">
         <canvas id="board"></canvas>
-        <div id="chat-box"></div>
+        <div id="chat-box">
+            <div id="players-container">
+                <h4 class="player" id="player1">Player 1</h4>
+                <h4 class="player" id="player2">Player 2</h4>
+            </div>
+            <div id="message-container"></div>
+        </div>
     </div>
     <script src="/static/scripts/nav.js?v={{ time }}"></script>
     <script>
@@ -30,7 +36,9 @@
         // const detail_container = document.getElementById("detail_container");
 
         let offset = 30;   //棋盤從30,30開始繪製
-        let len = 400;
+        // let len = 400;
+        let len = window.innerHeight * 0.7; // 設定 len 為螢幕高度的 50%
+        console.log(`len: ${len}`)
         canvas.width = len + offset*2;  // 設置畫布寬度
         canvas.height = len + offset*2; // 設置畫布高度
 
