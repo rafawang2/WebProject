@@ -59,7 +59,7 @@ async def chat_handler(websocket):
             data = json.loads(message)
             action = data.get("action")
             
-            #首次進入房間，顯示目前存在的房間
+            # 進入房間
             if action == "onloadPage":
                 GID = int(data["GID"])
                 room_id = data["room_id"]
@@ -172,8 +172,16 @@ async def chat_handler(websocket):
 
 
                     else:   #當房間已有兩人，其餘人都設為旁觀者
+                        
+                        # 告知觀戰目前對弈玩家
+                        players_data = {
+                            "action": "get_players",
+                            "players": fighting_users[GID][room_id][:2]
+                        }
+                        await broadcast_in_room(GID, room_id, json.dumps(players_data))
+                        
                         await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
-                        print(f"{username}作為觀戰者{room_id}")
+                        print(f"{username}作為觀戰者加入{room_id}")
                         rooms[GID][room_id]["visitors"].append((websocket, username))
                         await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{username}作為觀戰者加入房間{room_id}"))
                     

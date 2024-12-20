@@ -231,6 +231,23 @@ ws.onmessage = (event) => {
 
     if (data.action === "get_result") {
         winner = data["result"];
+        player1Element.classList.remove('current-player');
+        player2Element.classList.remove('current-player');
+
+        if (winner === -1) {
+            player1Element.classList.add('winner');
+            player2Element.classList.remove('winner');
+        }
+        else if (winner === 0) {
+            player1Element.classList.add('winner');
+            player2Element.classList.add('winner');
+        }
+        else if (winner === -1) {
+            player1Element.classList.remove('winner');
+            player2Element.classList.add('winner');
+        }
+
+
         return;
     }
 
