@@ -114,6 +114,10 @@ async def chat_handler(websocket):
                         }
                         await broadcast_in_room(GID, room_id, json.dumps(players_data))
                         
+                        # 在這邊串接資料庫
+                        # 建立新的Board data, BID="新BID", GID=GID, state=2, steps=None (steps檔案為存檔，先列為空，確定存檔在儲存)
+                        # 建立新的UB data, UID1=fighting_users[GID][current_room][0], UID1=fighting_users[GID][current_room][1], BID=BID
+                        
                         # 先加入的人自動獲得權限
                         fighting_users[GID][current_room].append(0)  #fighting_users[GID][current_room][fighting_users[GID][current_room][2]]有權限
                         permission_holder_idx = fighting_users[GID][current_room][2]
@@ -213,10 +217,18 @@ async def chat_handler(websocket):
 
                         winner = game.is_win()
                         rooms[GID][room_id]["winner"] = winner
+                        
+                        # 遊戲結束
                         if winner != 2:
                             file_path = GID_path[GID]
                             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                             file_path += f"{current_time}.json"
+                            # file_path要改成BID
+                            
+                            # 串資料庫，存結果
+                            # 確認存檔完成，資料庫: Board[BID][steps] = file_path
+                            # 存下遊戲結果，資料庫: Board[BID][state] = winner
+                            
                             game.save_log_to_json(file_path)
                             result_data= {
                                         "action": "get_result",
@@ -241,7 +253,6 @@ async def chat_handler(websocket):
                                 else:  # 如果是第二位玩家
                                     fighting_users[GID][room_id][2] = 0  # 換回第一位玩家
                                     web = rooms[GID][room_id]["users"][0][0]  # 給第一位玩家
-                                    
                                 await web.send(format_message("Server","get_location","is your turn"))
                                 if GID == 3:    #黑白棋
                                     valids = game.getValidMoves(game.current_player)
@@ -291,6 +302,18 @@ async def chat_handler(websocket):
             if not rooms[GID][current_room]["users"]:
                 if current_room in fighting_users[GID]:
                     del fighting_users[GID][current_room]
+                
+                # 中離也存檔案
+                file_path = GID_path[GID]
+                current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+                file_path += f"{current_time}.json"
+                # file_path要改成BID
+                
+                # 串資料庫，存結果
+                # 確認存檔完成，資料庫: Board[BID][steps] = file_path
+                # 存下遊戲結果(未完成)，資料庫: Board[BID][state] = 3   
+                rooms[GID][current_room]["game"].save_log_to_json(file_path)    
+                
                 # 房間內沒人時刪除房間                
                 del rooms[GID][current_room]
                 # 發送刪除房間的 DELETE 請求
