@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 from pathlib import Path
 from datetime import datetime
+from Database.Methods import Check_Username
 current_time = datetime.now().timestamp()
 app = FastAPI()
 
@@ -125,9 +126,9 @@ async def save_name(request: Request):
     if not user_name:
         return {"success": False, "error": "Username is required"}
     
-    
+   
     # 資料庫串接: 檢查user_name是否在資料庫，如果在，回傳username對應的UID，如果不在就建立新的User跟Record
-    UID = 0
+    UID = Check_Username(user_name)
     
     # 回傳UID，讓UID存在session storage，使其他的page可以存取
     return {"success": True, "UID": UID}
@@ -168,7 +169,7 @@ async def replayBoard(request: Request, GID: int):
     })
 
 if __name__ == "__main__":
-    # IP = "10.106.38.184"  #ncnu wifi
+    # IP = "10.106.38.184"    #ncnu wifi
     # IP = "192.168.0.133"    #澤生居 wifi
     IP = "127.0.0.1"
     uvicorn.run("main:app",host=IP,port=8080,reload=True)
