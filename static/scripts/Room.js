@@ -9,6 +9,8 @@ const player1Element = document.getElementById("player1");
 const player2Element = document.getElementById("player2");
 const userNameKey = "user_name"; // 儲存使用者名字的欄位
 username = sessionStorage.getItem(userNameKey);
+const UID = sessionStorage.getItem("UID");  //取得UID，方便存資料庫UB
+
 
 let players = null;
 
@@ -54,7 +56,8 @@ document.addEventListener("DOMContentLoaded", function() {
         action: "onloadPage",
         room_id: currentRoom,
         User: username,
-        GID: GID
+        GID: GID,
+        UID: UID
     });
     sendWhenReady(message);
 });

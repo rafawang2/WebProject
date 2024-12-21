@@ -87,21 +87,6 @@ async def upload_image(image: UploadFile = File(...)):
         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
 
-# 用於保存使用者名稱（簡單模擬存儲）
-class NameRequest(BaseModel):
-    name: str
-user_data = {"name": ""}
-# # 保存使用者名稱 API
-# @app.post("/save_name")
-# async def save_name(request: NameRequest):
-#     try:
-#         user_data["name"] = request.name  # 從請求中獲取名稱
-#         print(user_data["name"])
-#         return JSONResponse(content={"success": True, "name": request.name})
-#     except Exception as e:
-#         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
-
-
 exist_rooms = {
     1: [],
     2: [],
@@ -131,6 +116,22 @@ async def create_room(request: Request):
         return {"success": False, "message": "The room already exists!"}
     else:
         return {"success": False, "message": "room_id not provided"}
+
+
+# 將當前login的user的名字存入user_data
+@app.post("/save_name")
+async def save_name(request: Request):
+    user_name = request.headers.get("username")
+    if not user_name:
+        return {"success": False, "error": "Username is required"}
+    
+    
+    # 資料庫串接: 檢查user_name是否在資料庫，如果在，回傳username對應的UID，如果不在就建立新的User跟Record
+    UID = 0
+    
+    # 回傳UID，讓UID存在session storage，使其他的page可以存取
+    return {"success": True, "UID": UID}
+
 
 # 刪除房間的API
 # /delete_room?room_id={room_id}&GID={GID}

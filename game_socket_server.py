@@ -64,23 +64,23 @@ async def chat_handler(websocket):
                 GID = int(data["GID"])
                 room_id = data["room_id"]
                 username = data["User"]
+                UID = data["UID"]
                 current_room = room_id
                 # 若房間號不存在，則在socket server建立關於此房間的信息
                 if room_id not in rooms[GID]:
                     #設定room裡面有什麼東西
                     rooms[GID][room_id] = {
-                        "users":[],
-                        "visitors":[],
-                        "status":None,
+                        "users":[],     # [(socket, name, UID), ...]
+                        "visitors":[],  # [(socket, name, UID), ...]
+                        "status":None,  # 1: 1人, 2: 進行中, 3: 進行中斷
                         "board": [],
                         "message":[],
                         "game": game_classes.get(GID, lambda: None)(),  # 默認為 None
                         "winner": 2 # 遊戲進行中
                     }              
-                    rooms[GID][room_id]["users"].append((websocket, username))
+                    rooms[GID][room_id]["users"].append((websocket, username, UID))
                     current_room = room_id
                     rooms[GID][room_id]["status"] = 1
-
                     # 發送對戰人員給前端
                     players = [username, "N/A"]
                     players_data = {
@@ -98,7 +98,7 @@ async def chat_handler(websocket):
                     # 檢查房間當前狀態
                     if rooms[GID][room_id]["status"] == 1:   #裡面只有1位玩家
                         await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
-                        rooms[GID][room_id]["users"].append((websocket, username))
+                        rooms[GID][room_id]["users"].append((websocket, username, UID))
                         
 
                         rooms[GID][room_id]["status"] = 2
@@ -115,8 +115,8 @@ async def chat_handler(websocket):
                         await broadcast_in_room(GID, room_id, json.dumps(players_data))
                         
                         # 在這邊串接資料庫
-                        # 建立新的Board data, BID="新BID", GID=GID, state=2, steps=None (steps檔案為存檔，先列為空，確定存檔在儲存)
-                        # 建立新的UB data, UID1=fighting_users[GID][current_room][0], UID1=fighting_users[GID][current_room][1], BID=BID
+                        # 建立新的Board data, BID="新BID", GameID=GID, state=2, steps=None (steps檔案為存檔，先列為空，確定存檔在儲存)
+                        # 建立新的UB data, Player1=rooms[GID][room_id]["users"][0][2], Player2=rooms[GID][room_id]["users"][1][2], BID=BID
                         
                         # 先加入的人自動獲得權限
                         fighting_users[GID][current_room].append(0)  #fighting_users[GID][current_room][fighting_users[GID][current_room][2]]有權限
@@ -144,7 +144,7 @@ async def chat_handler(websocket):
                             print(f"權限未分配，因為房間 {room_id} 目前只有一位玩家")
                     
                     elif rooms[GID][room_id]["status"] == 3 and username in fighting_users[GID][room_id]: #判斷新加入的人是否為先前斷線的人
-                        rooms[GID][room_id]["users"].append((websocket, username))
+                        rooms[GID][room_id]["users"].append((websocket, username,UID))
                         await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         print(f"{username}重新加入房間{room_id}，開始下棋")
                         
@@ -173,8 +173,6 @@ async def chat_handler(websocket):
                                 await permission_socket.send(json.dumps(valids_data))
                                 await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         
-
-
                     else:   #當房間已有兩人，其餘人都設為旁觀者
                         
                         # 告知觀戰目前對弈玩家
@@ -186,9 +184,9 @@ async def chat_handler(websocket):
                         
                         await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         print(f"{username}作為觀戰者加入{room_id}")
-                        rooms[GID][room_id]["visitors"].append((websocket, username))
+                        rooms[GID][room_id]["visitors"].append((websocket, username,UID))
                         await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{username}作為觀戰者加入房間{room_id}"))
-                    
+
             # 接收用戶傳送座標
             elif action == "send_coordinates":
                 room_id = data["room_id"]
@@ -229,6 +227,10 @@ async def chat_handler(websocket):
                             # 確認存檔完成，資料庫: Board[BID][steps] = file_path
                             # 存下遊戲結果，資料庫: Board[BID][state] = winner
                             
+                            # 資料庫: 先手玩家: UID1: rooms[GID][room_id]["users"][0][2]
+                            # 資料庫: 先手玩家: UID2: rooms[GID][room_id]["users"][1][2]
+                            
+                            
                             game.save_log_to_json(file_path)
                             result_data= {
                                         "action": "get_result",
@@ -236,8 +238,24 @@ async def chat_handler(websocket):
                             }
                             await broadcast_in_room(GID, room_id, json.dumps(result_data))
                             if winner == -1:
+                                # 資料庫 Record:
+                                # 先手勝 
+                                # Record[UserID = UID1][GameID = GID][Win] += 1
+                                # Record[UserID = UID1][GameID = GID][Total] += 1
+                                
+                                # Record[UserID = UID2][GameID = GID][Lose] += 1
+                                # Record[UserID = UID1][GameID = GID][Total] += 1
+                                
                                 formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][0]}")
                             elif winner == 0:
+                                # 資料庫 Record:
+                                # 平手 
+                                # Record[UserID = UID1][GameID = GID][Draw] += 1
+                                # Record[UserID = UID1][GameID = GID][Total] += 1
+                                
+                                # Record[UserID = UID2][GameID = GID][Draw] += 1
+                                # Record[UserID = UID1][GameID = GID][Total] += 1
+                                
                                 formatted_message =  format_message("Server","display_message", "遊戲結束! 結果為平手")
                             elif winner == 1:
                                 formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][1]}")
@@ -293,10 +311,10 @@ async def chat_handler(websocket):
         if current_room and username:
             print(f"{username} left")
             #移除玩家
-            if (websocket, username) in rooms[GID][current_room]["users"]:
-                rooms[GID][current_room]["users"].remove((websocket, username))
-            elif (websocket, username) in rooms[GID][current_room]["visitors"]:
-                rooms[GID][current_room]["visitors"].remove((websocket, username))
+            if (websocket, username,UID) in rooms[GID][current_room]["users"]:
+                rooms[GID][current_room]["users"].remove((websocket, username, UID))
+            elif (websocket, username, UID) in rooms[GID][current_room]["visitors"]:
+                rooms[GID][current_room]["visitors"].remove((websocket, username, UID))
             
             # 房間內對戰的玩家均離開時
             if not rooms[GID][current_room]["users"]:
@@ -307,11 +325,20 @@ async def chat_handler(websocket):
                 file_path = GID_path[GID]
                 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                 file_path += f"{current_time}.json"
-                # file_path要改成BID
+                # file_path要改成路徑+BID
                 
                 # 串資料庫，存結果
                 # 確認存檔完成，資料庫: Board[BID][steps] = file_path
-                # 存下遊戲結果(未完成)，資料庫: Board[BID][state] = 3   
+                # 存下遊戲結果(未完成)，資料庫: Board[BID][state] = 3
+                
+                # 資料庫 Record:
+                # 未完賽
+                # Record[UserID = UID1][GameID = GID][Unfinish] += 1
+                # Record[UserID = UID1][GameID = GID][Total] += 1
+                
+                # Record[UserID = UID2][GameID = GID][Unfinish] += 1
+                # Record[UserID = UID1][GameID = GID][Total] += 1
+                
                 rooms[GID][current_room]["game"].save_log_to_json(file_path)    
                 
                 # 房間內沒人時刪除房間                
@@ -326,7 +353,7 @@ async def chat_handler(websocket):
 
 # 向對應的房間廣播訊息
 async def broadcast_in_room(GID, room_id, message):  
-    for websocket,_ in rooms[GID][room_id]["users"]:
+    for websocket,_, UID in rooms[GID][room_id]["users"]:
         await websocket.send(message)
     if rooms[GID][room_id]["visitors"]:
         for websocket,_ in rooms[GID][room_id]["visitors"]:
@@ -339,7 +366,7 @@ async def broadcast_board_in_room(GID, room_id, board):
         "Board": board,  # 使用鍵名 Board 傳遞棋盤給前端用戶
     }
     
-    for websocket,_ in rooms[GID][room_id]["users"]:
+    for websocket,_,UID in rooms[GID][room_id]["users"]:
         await websocket.send(json.dumps(board_data))
     if rooms[GID][room_id]["visitors"]:
         for websocket,_ in rooms[GID][room_id]["visitors"]:

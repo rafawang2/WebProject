@@ -31,6 +31,32 @@ loginButton.addEventListener("click", () => {
 
     // 將值存入 sessionStorage
     sessionStorage.setItem(userNameKey, inputUserName);
+    save_name(inputUserName)
     console.log(inputUserName)
     window.location.href = '/home'; // 成功後跳轉
 });
+
+function save_name(username) {
+    fetch("/save_name", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "username": username,
+        },
+        body: JSON.stringify({})  // We don't need to send any data in the request body
+    })
+    .then(response => response.json())  // Parse the JSON response
+    .then(data => {
+        if (data.success) {
+            console.log("Login successful")
+            const UID = data.UID;
+            sessionStorage.setItem("UID", UID);
+        } else {
+            alert("Error saving name");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while saving name.");
+    });
+}
