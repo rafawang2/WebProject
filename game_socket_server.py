@@ -77,7 +77,8 @@ async def chat_handler(websocket):
                         "board": [],
                         "message":[],
                         "game": game_classes.get(GID, lambda: None)(),  # 默認為 None
-                        "winner": 2 # 遊戲進行中
+                        "winner": 2 ,# 遊戲進行中
+                        "BID":""
                     }              
                     rooms[GID][room_id]["users"].append((websocket, username, UID))
                     current_room = room_id
@@ -117,7 +118,7 @@ async def chat_handler(websocket):
                         
                         # 在這邊串接資料庫
                         BID = Generate_BID(GID)
-                        
+                        rooms[GID][room_id]["BID"] = BID
                         board = {
                             "BoardID":BID,
                             "GameID":GID,
@@ -234,13 +235,8 @@ async def chat_handler(websocket):
                         # 遊戲結束
                         if winner != 2:
                             file_path = GID_path[GID]
-                            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-                            file_path += f"{current_time}.json"
                             # file_path要改成BID
-                            BID = Get_BID({"Player1":rooms[GID][room_id]["users"][0][2]})
-                            if BID == None:
-                                BID = Get_BID({"Player2":rooms[GID][room_id]["users"][1][2]})
-                            
+                            BID = rooms[GID][room_id]["BID"]
                             file_name = f"{BID}.json"
                             file_path += file_name
                             
@@ -282,6 +278,7 @@ async def chat_handler(websocket):
                                 }
                                 Update_Table("Records",data,{"RecordID":RID})
                                 
+                                rooms[GID][room_id]["states"] = 4
                                 formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][0]}")
                             elif winner == 0:
                                 # 資料庫 Record:
@@ -305,9 +302,33 @@ async def chat_handler(websocket):
                                     "Total":rows[0][1] +1
                                 }
                                 Update_Table("Records",data,{"RecordID":RID})
+                                rooms[GID][room_id]["states"] = 4
                                 formatted_message =  format_message("Server","display_message", "遊戲結束! 結果為平手")
                             elif winner == 1:
+                                # 後手勝
                                 formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][1]}")
+                                
+                                RID = f'{GID}_{rooms[GID][room_id]["users"][1][2]}'
+                                rows = Get_Records(RID,['Win','Total'])
+                                # Record[UserID = UID1][GameID = GID][Win] += 1
+                                # Record[UserID = UID1][GameID = GID][Total] += 1
+                                data = {
+                                    "Win":rows[0][0] +1,
+                                    "Total":rows[0][1] +1
+                                }
+                                print(data)
+                                Update_Table("Records",data,{"RecordID":RID})
+                                # Record[UserID = UID2][GameID = GID][Lose] += 1
+                                # Record[UserID = UID1][GameID = GID][Total] += 1
+                                RID = f'{GID}_{rooms[GID][room_id]["users"][0][2]}'
+                                rows = Get_Records(RID,['Lose','Total'])
+                                data = {
+                                    "Lose":rows[0][0] +1,
+                                    "Total":rows[0][1] +1
+                                }
+                                Update_Table("Records",data,{"RecordID":RID})
+                                rooms[GID][room_id]["states"] = 4
+                                
                             await broadcast_in_room(GID, room_id, formatted_message)
 
                         # 換人邏輯
@@ -360,33 +381,17 @@ async def chat_handler(websocket):
         if current_room and username:
             print(f"{username} left")
             #移除玩家
-            if (websocket, username,UID) in rooms[GID][current_room]["users"]:
-                rooms[GID][current_room]["users"].remove((websocket, username, UID))
-            elif (websocket, username, UID) in rooms[GID][current_room]["visitors"]:
-                rooms[GID][current_room]["visitors"].remove((websocket, username, UID))
-            
-            # 房間內對戰的玩家均離開時
-            if not rooms[GID][current_room]["users"]:
-                if current_room in fighting_users[GID]:
-                    del fighting_users[GID][current_room]
-                
-                # 中離也存檔案
+            # 中離也存檔案
+
+            if rooms[GID][room_id]["states"] == 2:
                 file_path = GID_path[GID]
                 # file_path要改成路徑+BID
-                BID = Get_BID({"Player1":rooms[GID][room_id]["users"][0][2]})
-                if BID == None:
-                    BID = Get_BID({"Player2":rooms[GID][room_id]["users"][1][2]})
-                
+                BID = rooms[GID][room_id]["BID"]
                 file_name = f"{BID}.json"
                 file_path += file_name
-                # 串資料庫，存結果
-                # 確認存檔完成，資料庫: Board[BID][steps] = file_path
-                # 存下遊戲結果(未完成)，資料庫: Board[BID][state] = 3
+                
                 Update_Table("Boards",{"Steps":file_path,"State":3},{"BoardID":BID})
-                # 資料庫 Record:
-                # 未完賽
-                # Record[UserID = UID1][GameID = GID][Unfinish] += 1
-                # Record[UserID = UID1][GameID = GID][Total] += 1
+                
                 RID = f'{GID}_{rooms[GID][room_id]["users"][0][2]}'
                 rows = Get_Records(RID,['Unfinish','Total'])
                 data = {
@@ -404,8 +409,26 @@ async def chat_handler(websocket):
                     "Total":rows[0][1] +1
                 }
                 Update_Table("Records",data,{"RecordID":RID})
+            
+            
+            if (websocket, username,UID) in rooms[GID][current_room]["users"]:
+                rooms[GID][current_room]["users"].remove((websocket, username, UID))
+            elif (websocket, username, UID) in rooms[GID][current_room]["visitors"]:
+                rooms[GID][current_room]["visitors"].remove((websocket, username, UID))
+            
+            # 房間內對戰的玩家均離開時
+            if not rooms[GID][current_room]["users"]:
                 
-                rooms[GID][current_room]["game"].save_log_to_json(file_path)    
+                if current_room in fighting_users[GID]:
+                    del fighting_users[GID][current_room]
+            
+                if rooms[GID][room_id]["states"] == 3:
+                    file_path = GID_path[GID]
+                    # file_path要改成路徑+BID
+                    BID = rooms[GID][room_id]["BID"]
+                    file_name = f"{BID}.json"
+                    file_path += file_name
+                    rooms[GID][current_room]["game"].save_log_to_json(file_path)    
                 
                 # 房間內沒人時刪除房間                
                 del rooms[GID][current_room]
@@ -443,8 +466,7 @@ def first_play():
     return res 
 # 傳送格式化訊息
 def format_message(sender,action,message):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return json.dumps({"timestamp": timestamp, "sender": sender,"action": action, "message": message})
+    return json.dumps({"sender": sender,"action": action, "message": message})
 
 async def main():
     print("WebSocket server is running...")

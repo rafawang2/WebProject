@@ -245,7 +245,7 @@ ws.onmessage = (event) => {
             player1Element.classList.add('winner');
             player2Element.classList.add('winner');
         }
-        else if (winner === -1) {
+        else if (winner === 1) {
             player1Element.classList.remove('winner');
             player2Element.classList.add('winner');
         }
@@ -280,7 +280,7 @@ ws.onmessage = (event) => {
             }, 0); // 延遲 0 毫秒強制重繪
         }
         
-        messageElement.textContent = `[${data.timestamp}] ${data.sender}: ${data.message}`;
+        messageElement.textContent = `${data.sender}: ${data.message}`;
         messageContainer.appendChild(messageElement);
         messageContainer.scrollTop = messageContainer.scrollHeight;
         return;
@@ -301,11 +301,11 @@ ws.onmessage = (event) => {
     // 檢查是不是要顯示座標
     if(data.action === "display_location")
     {
-        messageElement.textContent = `[${data.timestamp}] ${data.sender}: ${data.message["Row"]} ${data.message["Col"]}`;
+        messageElement.textContent = ` ${data.sender}: ${data.message["Row"]} ${data.message["Col"]}`;
     }
     else
     // 不是的話就是一般訊息
-    messageElement.textContent = `[${data.timestamp}] ${data.sender}: ${data.message}`;
+    messageElement.textContent = ` ${data.sender}: ${data.message}`;
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
 };
