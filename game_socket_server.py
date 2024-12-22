@@ -278,7 +278,7 @@ async def chat_handler(websocket):
                                 }
                                 Update_Table("Records",data,{"RecordID":RID})
                                 
-                                rooms[GID][room_id]["states"] = 4
+                                rooms[GID][room_id]["status"] = 4
                                 formatted_message =  format_message("Server","display_message", f"遊戲結束! 勝者為{fighting_users[GID][current_room][0]}")
                             elif winner == 0:
                                 # 資料庫 Record:
@@ -302,7 +302,7 @@ async def chat_handler(websocket):
                                     "Total":rows[0][1] +1
                                 }
                                 Update_Table("Records",data,{"RecordID":RID})
-                                rooms[GID][room_id]["states"] = 4
+                                rooms[GID][room_id]["status"] = 4
                                 formatted_message =  format_message("Server","display_message", "遊戲結束! 結果為平手")
                             elif winner == 1:
                                 # 後手勝
@@ -327,7 +327,7 @@ async def chat_handler(websocket):
                                     "Total":rows[0][1] +1
                                 }
                                 Update_Table("Records",data,{"RecordID":RID})
-                                rooms[GID][room_id]["states"] = 4
+                                rooms[GID][room_id]["status"] = 4
                                 
                             await broadcast_in_room(GID, room_id, formatted_message)
 
@@ -383,7 +383,7 @@ async def chat_handler(websocket):
             #移除玩家
             # 中離也存檔案
 
-            if rooms[GID][room_id]["states"] == 2:
+            if rooms[GID][room_id]["status"] == 2:
                 file_path = GID_path[GID]
                 # file_path要改成路徑+BID
                 BID = rooms[GID][room_id]["BID"]
@@ -422,7 +422,7 @@ async def chat_handler(websocket):
                 if current_room in fighting_users[GID]:
                     del fighting_users[GID][current_room]
             
-                if rooms[GID][room_id]["states"] == 3:
+                if rooms[GID][room_id]["status"] == 3:
                     file_path = GID_path[GID]
                     # file_path要改成路徑+BID
                     BID = rooms[GID][room_id]["BID"]

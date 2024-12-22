@@ -36,28 +36,100 @@ async def homepage(request: Request):
 async def aboutpage(request: Request):
     return templates.TemplateResponse("about.html",{"request": request , "time": current_time})
 
+
+
+def save_replay_boards_to_json(BIDs, UID):
+    """
+    將 BIDs 字典保存為指定格式的 JSON 文件。
+
+    :param BIDs: 包含對局資訊的字典
+    :param filename: 儲存的 JSON 文件名稱（默認為 "replay_boards.json"）
+    """
+    filename = f'static/Log/Replay_log/ReplayBoard_log_{UID}.json'
+    # 包裝 ReplayBoards 結構
+    data = {"ReplayBoards": BIDs}
+    
+    # 將資料寫入 JSON 文件
+    try:
+        with open(filename, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+        print(f"JSON file saved successfully as {filename}")
+    except Exception as e:
+        print(f"Error saving JSON file: {e}")
+
+@app.get("/get_replay_BIDs")
+async def get_user_historyBIDs(request: Request):
+    # 資料庫
+    UID = request.headers.get("UID")
+    #資料庫
+    # 這邊取得UID裡面的所有BID紀錄，並存成dict list
+    # 還要從UB取得UID1跟UID2的username, (UID1->username1, UID2->username2)
+    # BIDs = {
+    #     BID1: {
+    #         "GID": GID,
+    #         "player1": username1,
+    #         "player2": username2,
+    #         "uid1": UID1,
+    #         "uid2": UID2,     
+    #         "state": state
+    #     },
+    #     BID2: {
+    #         "GID": GID,
+    #         "player1": username1,
+    #         "player2": username2,
+    #         "uid1": UID1,
+    #         "uid2": UID2, 
+    #         "state": state
+    #     }
+    #     ....
+    # }
+    BIDs = {
+        1: {
+            "GID": 1,
+            "player1": "user1",
+            "player2": "user2",
+            "uid1": "1",
+            "uid2": "2", 
+            "path": "/static/Log/GO_log/game_log.json",    
+            "state": -1
+        },
+        2: {
+            "GID": 2,
+            "player1": "user3",
+            "player2": "user1",
+            "uid1": "3",
+            "uid2": "1", 
+            "path": "/static/Log/Gomoku_log/game_log.json",   
+            "state": 1
+        }
+    }
+    
+    save_replay_boards_to_json(BIDs,UID)
+    
+    return BIDs
+
 @app.get("/SelectReplayBoard",response_class=HTMLResponse)
 async def SelectPeplay(request: Request):
     return templates.TemplateResponse("SelectReplayBoard.html", {"request": request, "time": current_time})
 
 #導向選擇的棋盤頁面，並用BID與GID作為連結參數使用
 @app.get("/SelectReplayBoard/replayBoard",response_class=HTMLResponse)
-async def replayBoard(request: Request, BID: int, GID: int):
-    file_name = 'static/Log/Replay_log/ReplayBoard_log.json'
-    # 讀取 JSON 文件並轉換為 Python 字典
+async def replayBoard(request: Request, BID: str, UID: str):
+    file_name = f'static/Log/Replay_log/ReplayBoard_log_{UID}.json'
+    # 讀取UID 回放盤面 JSON 文件並轉換為 Python 字典
     with open(file_name, 'r', encoding='utf-8') as file:
         data = json.load(file)
     
     #查找BID，之後由資料庫查找代替
     board = data["ReplayBoards"].get(str(BID))
-    status = board["status"]
+    state = board["state"]
     p1 = board["player1"]
     p2 = board["player2"]
-    
+    GID = board["GID"]
     return templates.TemplateResponse("Replay.html", {  #將此局參數回傳給Replay.html並顯示
         "BID":     BID,
         "GID":     GID,
-        "status":  status,
+        "status":  state,
         "player1": p1,
         "player2": p2,
         "request": request,
@@ -123,6 +195,7 @@ async def create_room(request: Request):
 @app.post("/save_name")
 async def save_name(request: Request):
     user_name = request.headers.get("username")
+    print(user_name)
     if not user_name:
         return {"success": False, "error": "Username is required"}
     

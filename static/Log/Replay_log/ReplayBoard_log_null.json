@@ -1,0 +1,22 @@
+{
+    "ReplayBoards": {
+        "1": {
+            "GID": 1,
+            "player1": "user1",
+            "player2": "user2",
+            "uid1": "1",
+            "uid2": "2",
+            "path": "/static/Log/GO_log/game_log.json",
+            "state": -1
+        },
+        "2": {
+            "GID": 2,
+            "player1": "user3",
+            "player2": "user1",
+            "uid1": "3",
+            "uid2": "1",
+            "path": "/static/Log/Gomoku_log/game_log.json",
+            "state": 1
+        }
+    }
+}

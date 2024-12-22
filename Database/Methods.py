@@ -15,7 +15,7 @@ def Generate_UID():
     if now != data["last_date"] :
         data["number"] = 1
                 
-    Uid =f"{now}{data["number"]:06d}"
+    Uid =f'{now}{data["number"]:06d}'
 
     with open(json_file, "w", encoding="utf-8") as file:
         data["number"] += 1
