@@ -65,3 +65,16 @@ def Select_from_table(table:str,cols:list,condition:dict=None):
         commend += where
         
     return commend
+
+def Generate_Update_Part(cols:list,vals:list):
+    
+    set_part = ""
+    for i in range(len(cols)):
+        val = f"{vals[i]}" if type(vals[i]) != str else f"'{vals[i]}'"
+        if i != len(cols) - 1 :
+            temp = f"{cols[i]} = {val},"
+        else:
+            temp = f"{cols[i]} = {val}"
+        set_part += temp
+        
+    return set_part

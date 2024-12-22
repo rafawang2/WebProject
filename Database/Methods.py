@@ -63,3 +63,72 @@ def Check_Username(username):
             connection.commit()
             
         return UID
+
+def Generate_BID(gid):
+    game_num = {
+        1:"G1",
+        2:"G2",
+        3:"G3",
+        4:"G4"
+    }
+    json_file = "Database/varble.json"
+    data = None
+    with open(json_file, "r", encoding="utf-8") as file:
+        f = file.read()
+        data = json.loads(f)
+         
+    Bid =f"{gid}{data[game_num[gid]]:010d}"
+
+    with open(json_file, "w", encoding="utf-8") as file:
+        data[game_num[gid]] += 1
+        w = json.dumps(data)
+        file.write(w)
+        file.close()
+        
+    return Bid
+
+def Create_Data(table:str,data:dict):
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        command = Insert_to_table(table,data)
+        res = connection.execute(text(command))
+        connection.commit()
+        
+        
+def Get_BID(condition:dict):
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        command = Select_from_table("UB",['BoardID','Player1','Player2'],condition)
+        res = connection.execute(text(command))
+        rows = res.fetchall()
+        if len(rows) != 0 :
+            return rows[0][0]
+
+        else:
+            return None
+        
+def Update_Table(table,data:dict,condition:dict):
+    
+    cols = list(data.keys())
+    vals = list(data.values())
+    set_part = Generate_Update_Part(cols,vals)
+
+    cols = list(condition.keys())
+    vals = list(condition.values())
+    where_part = Generate_Update_Part(cols,vals)
+
+    command = f'UPDATE [{table}] SET {set_part} WHERE {where_part}'
+    
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        res = connection.execute(text(command))
+        connection.commit()
+
+
+def Get_Records(RID,items:list):
+    command = Select_from_table("Records",items,{"RecordID":RID})
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        res = connection.execute(text(command))
+        rows = res.fetchall()
+        return rows
