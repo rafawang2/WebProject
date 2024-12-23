@@ -84,7 +84,7 @@ async def get_user_historyBIDs(request: Request):
     #     ....
     # }
     BIDs = {
-        1: {
+        "1": {
             "GID": 1,
             "player1": "user1",
             "player2": "user2",
@@ -93,7 +93,7 @@ async def get_user_historyBIDs(request: Request):
             "path": "/static/Log/GO_log/game_log.json",    
             "state": -1
         },
-        2: {
+        "2": {
             "GID": 2,
             "player1": "user3",
             "player2": "user1",
