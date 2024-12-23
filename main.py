@@ -120,7 +120,6 @@ async def replayBoard(request: Request, BID: str, UID: str):
     with open(file_name, 'r', encoding='utf-8') as file:
         data = json.load(file)
     
-    #查找BID，之後由資料庫查找代替
     board = data["ReplayBoards"].get(str(BID))
     state = board["state"]
     p1 = board["player1"]
@@ -155,8 +154,43 @@ def save_record_to_json(Record_data, UID):
 @app.get("/profile", response_class=HTMLResponse)
 async def profilepage(request: Request, UID: str):
     
-    # 資料庫: 透過路徑參數UID查找此user所有遊戲的戰績紀錄並存成json
+    # 資料庫Record: 透過路徑參數UID查找此user所有遊戲的戰績紀錄並存成json
     # 如下
+    # {
+    #     GID: {
+    #         "total": Record[GID][UID][total],
+    #         "win": Record[GID][UID][win],
+    #         "lose": Record[GID][UID][lose],
+    #         "unfinish": Record[GID][UID][unfinish]
+    #     }
+    # }
+    # record_data = {
+    #         1 :{
+    #             "total": 2,
+    #             "win": 0,
+    #             "lose": 2,
+    #             "unfinish": 0
+    #         }, => 圍棋
+    #         2 :{
+    #             "total": 2,
+    #             "win": 0,
+    #             "lose": 2,
+    #             "unfinish": 0
+    #         }, => 五子棋
+    #         3 :{
+    #             "total": 2,
+    #             "win": 2,
+    #             "lose": 0,
+    #             "unfinish": 0
+    #         }, => 黑白棋
+    #         4 :{
+    #             "total": 2,
+    #             "win": 0,
+    #             "lose": 2,
+    #             "unfinish": 0
+    #         } => 點格棋
+    #     }
+    
     record_data = {
                 "1" :{
                     "total": 2,
