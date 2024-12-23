@@ -38,7 +38,8 @@ const url = `/static/Log/GameRecord_log/Record_${UID}.json`;  // 生成 URL
 console.log(url);  // 記錄 URL
 
 // 取得玩家的遊戲紀錄
-fetch(url)
+document.addEventListener("DOMContentLoaded", function () {
+    fetch(url)
     .then(response => response.json())
     .then(data => {
         const Record_container = document.getElementById("game_record_container");
@@ -64,8 +65,10 @@ fetch(url)
                 <p>總場數：${board.total}</p>
                 <p>勝場：${board.win}</p>
                 <p>敗場：${board.lose}</p>
+                <p>未完成：${board.unfinish}</p>
             `;
             Record_container.appendChild(boardItem);
         });
     })
     .catch(error => console.error("無法載入 JSON 資料:", error));
+});

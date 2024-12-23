@@ -140,9 +140,50 @@ async def replayBoard(request: Request, BID: str, UID: str):
 UPLOAD_DIR = Path("static/images/users")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)  # 如果目錄不存在則創建
 
+def save_record_to_json(Record_data, UID):
+    filename = f'static/Log/GameRecord_log/Record_{UID}.json'
+    data = {"record": Record_data}
+    # 將資料寫入 JSON 文件
+    try:
+        with open(filename, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+        print(f"JSON file saved successfully as {filename}")
+    except Exception as e:
+        print(f"Error saving JSON file: {e}")
+
 #渲染個人資料頁面
 @app.get("/profile", response_class=HTMLResponse)
-async def profilepage(request: Request):
+async def profilepage(request: Request, UID: str):
+    
+    # 資料庫: 透過路徑參數UID查找此user所有遊戲的戰績紀錄並存成json
+    # 如下
+    record_data = {
+                "1" :{
+                    "total": 2,
+                    "win": 0,
+                    "lose": 2,
+                    "unfinish": 0
+                },
+                "2" :{
+                    "total": 2,
+                    "win": 0,
+                    "lose": 2,
+                    "unfinish": 0
+                },
+                "3" :{
+                    "total": 2,
+                    "win": 2,
+                    "lose": 0,
+                    "unfinish": 0
+                },
+                "4" :{
+                    "total": 2,
+                    "win": 0,
+                    "lose": 2,
+                    "unfinish": 0
+                }
+            }
+    save_record_to_json(record_data, UID)
     return templates.TemplateResponse("user_profile.html", {"request": request, "time": current_time})
 
 #上傳圖片，將其儲存為 man.png 並返回 URL

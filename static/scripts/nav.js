@@ -32,6 +32,17 @@ async function loadHTML() {
 
                     // 展開當前內容
                     content.style.maxHeight = content.scrollHeight + 'px';
+
+                    const UID = sessionStorage.getItem("UID");  // 取得 UID
+                    const to_profile = document.getElementById("link_to_profile");
+                    to_profile.addEventListener("click", () => {
+                        window.location.href = `/profile?UID=${UID}`;
+                    });
+
+                    const to_boards = document.getElementById("link_to_board_record");
+                    to_boards.addEventListener("click", () => {
+                        window.location.href = `/SelectReplayBoard`;
+                    });
                 }
             });
         });

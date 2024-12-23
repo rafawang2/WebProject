@@ -137,7 +137,7 @@ header #link_back_container a:hover
 
 }
 
-.accordion-content a:hover {
+.accordion-content .move_to:hover {
     cursor: pointer;
     background: linear-gradient(   135deg,  
         rgba(191,210,85,1) 0%,
@@ -156,7 +156,7 @@ h2 {
     box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.1); /* 內部陰影增強層次 */
   }
 
-.accordion-content a
+.accordion-content .move_to
 {
     display: flex; /* 讓 <a> 成為區塊級元素 */
     justify-content: flex-start; /* 將文字移到左邊 */
