@@ -7,6 +7,8 @@ def Generate_UID(last,number):
     if now != last:
         number = 1;
     return f"{now}{number:06d}"
+
+
 def Get_String(input,mode:int):
 # mode: 決定input 為 list or dict
     keys = []
@@ -61,7 +63,7 @@ def Select_from_table(table:str,cols:list,condition:dict=None):
     
     if condition != None:
         cond,val = Get_String(condition,0)
-        where = f'WHERE {cond} = {val}'
+        where = f' WHERE {cond} = {val}'
         commend += where
         
     return commend

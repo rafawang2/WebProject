@@ -95,17 +95,6 @@ def Create_Data(table:str,data:dict):
         connection.commit()
         
         
-def Get_BID(condition:dict):
-    engine = Connect_DB()
-    with engine.connect() as connection:
-        command = Select_from_table("UB",['BoardID','Player1','Player2'],condition)
-        res = connection.execute(text(command))
-        rows = res.fetchall()
-        if len(rows) != 0 :
-            return rows[0][0]
-
-        else:
-            return None
         
 def Update_Table(table,data:dict,condition:dict):
     
@@ -132,3 +121,56 @@ def Get_Records(RID,items:list):
         res = connection.execute(text(command))
         rows = res.fetchall()
         return rows
+
+def Get_BID(UID):
+    command = f"SELECT * FROM [UB] WHERE Player1 = '{UID}' OR Player2 = '{UID}'"
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        res = connection.execute(text(command))
+        rows = res.fetchall()
+        return rows
+
+def Get_username(uid1,uid2):
+    
+    command = f"SELECT [Nickname] FROM [User] WHERE UserID = '{uid1}'"
+    data = []
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        res = connection.execute(text(command))
+        rows = res.fetchall()
+        data.append(rows[0][0])
+        
+        command = f"SELECT [Nickname] FROM [User] WHERE UserID = '{uid2}'"
+        res = connection.execute(text(command))
+        rows = res.fetchall()
+        data.append(rows[0][0])
+    
+    return data
+
+def Get_Board(cols,condition):
+    command = Select_from_table("Boards",cols,condition)
+    
+    engine = Connect_DB()
+    with engine.connect() as connection:
+        res = connection.execute(text(command))
+        rows = res.fetchall()
+        print(rows)
+        return rows[0][0]
+    
+
+def Get_Replay(UID):
+    Res = {}
+    Data = Get_BID(UID)
+    for BID,player1,player2 in Data:
+        names = Get_username(player1,player2)
+        state = Get_Board(['State'],{"BoardID":BID})
+        Res[BID] ={
+            "GID": int(BID[0]),
+            "player1": names[0],
+            "player2": names[1],
+            "uid1": player1,
+            "uid2": player2, 
+            "state": state
+        }
+        
+    return Res
