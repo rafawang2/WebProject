@@ -107,19 +107,19 @@ let path = "";
 let msg = "";
 if(GID==="1") //圍棋
 {
-    path = "/static/Log/GO_log/game_log.json";
+    path = `/static/Log/GO_log/${BID}.json`;
 }
 else if(GID==="3") //黑白棋
 {
-    path = "/static/Log/Othello_log/game_log.json";
+    path = `/static/Log/Othello_log/${BID}.json`;
 }
 else if(GID==="2") //五子棋
 {
-    path = "/static/Log/Gomoku_log/game_log.json";
+    path = `/static/Log/Gomoku_log/${BID}.json`;
 }
 else if(GID==="4") //點格棋
 {
-    path = "/static/Log/DaB_log/game_log.json";
+    path = `/static/Log/DaB_log/${BID}.json`;
 }
 fetch(path)
 .then(response => response.json())
