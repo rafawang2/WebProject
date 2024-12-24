@@ -7,6 +7,10 @@ from fastapi.templating import Jinja2Templates
 
 from pathlib import Path
 from datetime import datetime
+
+from GameLogics.OthelloGame import OthelloGame
+from GameLogics.bots.AlphaBetaOthello import AlphaBeta
+
 from Database.Methods import *
 current_time = datetime.now().timestamp()
 app = FastAPI()
@@ -283,8 +287,98 @@ async def replayBoard(request: Request, GID: int):
         "time":    current_time
     })
 
+
+bot_games = {}
+# 與AI機器人的對下的API
+@app.get("/bot_room")
+async def room_page(request: Request, UID: str, GID: str):
+    if UID not in bot_games:
+        bot_games[UID] = OthelloGame(8)
+    
+    return templates.TemplateResponse("bot_room.html", {
+        "request": request,
+        "time": current_time,
+        "GID": str(GID),
+        "board": bot_games[UID].board
+        })
+
+@app.get("/get_board")
+async def get_board(request: Request, UID: str, GID: int):
+    if UID not in bot_games:
+        bot_games[UID] = OthelloGame(8)
+    
+    permission = ""
+    if bot_games[UID].current_player == -1:
+        permission = "Human"
+    else:
+        permission = "BOT"
+    if bot_games[UID].is_win()!=2:
+        permission = "No"
+    return {"board": bot_games[UID].board, "Permission": permission, "valid_moves": bot_games[UID].getValidMoves(bot_games[UID].current_player), "winner": bot_games[UID].winner}
+
+
+@app.get("/get_bot_move")
+async def get_bot_move(request: Request, UID: str):
+    if UID not in bot_games:
+        bot_games[UID] = OthelloGame(8)
+    # bot下的座標
+    r, c = AlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
+    permission = "BOT"
+    if bot_games[UID].current_player==1:
+        last_player = bot_games[UID].current_player
+        bot_games[UID].make_move(r,c)
+        bot_games[UID].winner = bot_games[UID].is_win()
+            
+        # 結束遊戲
+        if bot_games[UID].winner != 2:
+            end_board = bot_games[UID].board
+            winner = bot_games[UID].winner
+            del bot_games[UID]
+            return {"board": end_board, "winner": winner, "permission": "No"}
+
+        if last_player != bot_games[UID].current_player:    # 換成玩家
+            permission = "Human"
+        else:
+            permission = "BOT"    # 沒換人
+    # 返回新的board
+    msg = {
+        "sender": "BOT",
+        "message": f"{r} {c}"
+    }
+    valids = bot_games[UID].getValidMoves(bot_games[UID].current_player)
+    return {"board": bot_games[UID].board, "valid_moves": valids, "permission": permission, "winner": bot_games[UID].winner, "message": msg}
+
+@app.post("/user_send_coordinate")
+async def handle_coordinate(request: Request, UID: str):
+    if UID not in bot_games:
+        bot_games[UID] = OthelloGame(8)
+    # user下的座標
+    r = int(request.headers.get("row"))
+    c = int(request.headers.get("col"))
+    permission = "Human"
+    if bot_games[UID].is_valid(r,c) and bot_games[UID].current_player==-1:
+        last_player = bot_games[UID].current_player
+        bot_games[UID].make_move(r,c)
+        bot_games[UID].winner = bot_games[UID].is_win()
+            
+        # 結束遊戲
+        if bot_games[UID].winner != 2:
+            end_board = bot_games[UID].board
+            winner = bot_games[UID].winner
+            del bot_games[UID]
+            return {"board": end_board, "winner": winner, "permission": "No"}
+
+        if last_player != bot_games[UID].current_player:    # 換成AI
+            permission = "BOT"
+        else:
+            permission = "Human"    # 沒換人
+    # 返回新的 board
+    valids = bot_games[UID].getValidMoves(bot_games[UID].current_player)
+    return {"board": bot_games[UID].board, "valid_moves": valids, "permission": permission, "winner": bot_games[UID].winner}
+        
 if __name__ == "__main__":
     # IP = "10.106.38.184"    #ncnu wifi
-    # IP = "192.168.0.133"    #澤生居 wifi
-    IP = "192.168.2.11"
+    IP = "192.168.0.133"    #澤生居 wifi
+    # IP = "192.168.2.11"
+    # IP = 127.0.0.1
     uvicorn.run("main:app",host=IP,port=8080,reload=True)

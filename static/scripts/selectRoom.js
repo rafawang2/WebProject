@@ -2,8 +2,14 @@ const messageInput = document.getElementById("message");
 const sendButton = document.getElementById("send-button");
 const chatBox = document.getElementById("chat-box");
 let username = null;
-
+let UID = sessionStorage.getItem("UID");  //取得UID，方便存資料庫UB
+if(!UID)
+    UID ="0800"
 let exist_rooms = roomIds;
+
+function toBotRoom() {
+    window.location.href = `/bot_room?UID=${UID}&GID=${GID}`;
+}
 
 function search_room(roomId) {
     if (roomId === "") {

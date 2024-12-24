@@ -48,9 +48,7 @@ function drawValid(x, y) {
 }
 
 function drawBoard(ctx, canvas, game_type, board, offset, gap, radius, len) {
-    console.log(GID)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // console.log(board);
     // 繪製棋盤線條
     if(game_type==="3") //黑白棋
     {
