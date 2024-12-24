@@ -333,7 +333,7 @@ async def get_bot_move(request: Request, UID: str, GID: int):
     elif GID == 3:
         r, c = OthelloAlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
     elif GID == 4:
-        r, c = MCTSPlayer(num_simulations=5, exploration_weight=1.5, max_depth=1,game=bot_games[UID]).getAction(bot_games[UID].board, bot_games[UID].current_player)
+        r, c = MCTSPlayer(num_simulations=50, exploration_weight=1.5, max_depth=3,game=bot_games[UID]).getAction(bot_games[UID].board, bot_games[UID].current_player)
     permission = "BOT"
     if bot_games[UID].current_player==1:
         last_player = bot_games[UID].current_player
