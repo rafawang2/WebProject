@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
         else {
             // 正確設置 board
             board = data.board;
-            if (is_myTurn && valids != null) {
+            if (is_myTurn && valids != null && GID==="3") {
                 valids.forEach(([row, col]) => {
                     board[row][col] = 2;
                 });    
@@ -178,6 +178,18 @@ function handleClick(row, col) {
             is_myTurn = false; // 遊戲結束，禁止點擊
             board = data.board;
             winner = data.winner;
+            if (winner === -1) {
+                player1Element.classList.add('winner');
+                player2Element.classList.remove('winner');
+            }
+            else if (winner === 0) {
+                player1Element.classList.add('winner');
+                player2Element.classList.add('winner');
+            }
+            else if (winner === 1) {
+                player1Element.classList.remove('winner');
+                player2Element.classList.add('winner');
+            }
             drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
 
             msg = {
@@ -185,8 +197,8 @@ function handleClick(row, col) {
                 "message": `${winner} won`
             }
             displayMSG(msg)
-
-        } else {
+        } 
+        else {
             // 伺服器返回新的 board，更新顯示
             board = data.board;
             drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
@@ -204,7 +216,7 @@ function handleClick(row, col) {
 
                 is_myTurn = true;
                 valids = data.valid_moves;
-                if(is_myTurn && valids != null) {
+                if(is_myTurn && valids != null && GID==="3") {
                     valids.forEach(([row, col]) => {
                         board[row][col] = 2;
                     });
@@ -232,7 +244,7 @@ function handleClick(row, col) {
 }
 
 function get_bot_move() {
-    fetch(`/get_bot_move?UID=${UID}`, {
+    fetch(`/get_bot_move?UID=${UID}&GID=${GID}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -286,7 +298,7 @@ function get_bot_move() {
 
                 is_myTurn = true;
                 valids = data.valid_moves;
-                if(is_myTurn && valids != null) {
+                if(is_myTurn && valids != null && GID==="3") {
                     valids.forEach(([row, col]) => {
                         board[row][col] = 2;
                     });

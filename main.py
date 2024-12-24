@@ -10,6 +10,8 @@ from datetime import datetime
 
 from GameLogics.OthelloGame import OthelloGame
 from GameLogics.bots.AlphaBetaOthello import OthelloAlphaBeta
+from GameLogics.Dots_and_Box import DotsAndBox
+from GameLogics.bots.DaB_MCTS import MCTSPlayer
 
 from Database.Methods import *
 current_time = datetime.now().timestamp()
@@ -291,9 +293,16 @@ async def replayBoard(request: Request, GID: int):
 bot_games = {}
 # 與AI機器人的對下的API
 @app.get("/bot_room")
-async def room_page(request: Request, UID: str, GID: str):
+async def room_page(request: Request, UID: str, GID: int):
     if UID not in bot_games:
-        bot_games[UID] = OthelloGame(8)
+        if GID == 1:
+            bot_games[UID] = OthelloGame(8)
+        elif GID == 2:
+            bot_games[UID] = OthelloGame(8)
+        elif GID == 3:
+            bot_games[UID] = OthelloGame(8)
+        elif GID == 4:
+            bot_games[UID] = DotsAndBox(5,5)
     
     return templates.TemplateResponse("bot_room.html", {
         "request": request,
@@ -304,9 +313,6 @@ async def room_page(request: Request, UID: str, GID: str):
 
 @app.get("/get_board")
 async def get_board(request: Request, UID: str, GID: int):
-    if UID not in bot_games:
-        bot_games[UID] = OthelloGame(8)
-    
     permission = ""
     if bot_games[UID].current_player == -1:
         permission = "Human"
@@ -318,15 +324,20 @@ async def get_board(request: Request, UID: str, GID: int):
 
 
 @app.get("/get_bot_move")
-async def get_bot_move(request: Request, UID: str):
-    if UID not in bot_games:
-        bot_games[UID] = OthelloGame(8)
+async def get_bot_move(request: Request, UID: str, GID: int):
     # bot下的座標
-    r, c = OthelloAlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
+    if GID == 1:
+        r, c = OthelloAlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
+    elif GID == 2:
+        r, c = OthelloAlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
+    elif GID == 3:
+        r, c = OthelloAlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
+    elif GID == 4:
+        r, c = MCTSPlayer(num_simulations=5, exploration_weight=1.5, max_depth=1,game=bot_games[UID]).getAction(bot_games[UID].board, bot_games[UID].current_player)
     permission = "BOT"
     if bot_games[UID].current_player==1:
         last_player = bot_games[UID].current_player
-        bot_games[UID].make_move(r,c)
+        bot_games[UID].make_move(r,c, bot_games[UID].current_player)
         bot_games[UID].winner = bot_games[UID].is_win()
             
         # 結束遊戲
@@ -350,15 +361,13 @@ async def get_bot_move(request: Request, UID: str):
 
 @app.post("/user_send_coordinate")
 async def handle_coordinate(request: Request, UID: str):
-    if UID not in bot_games:
-        bot_games[UID] = OthelloGame(8)
     # user下的座標
     r = int(request.headers.get("row"))
     c = int(request.headers.get("col"))
     permission = "Human"
     if bot_games[UID].is_valid(r,c) and bot_games[UID].current_player==-1:
         last_player = bot_games[UID].current_player
-        bot_games[UID].make_move(r,c)
+        bot_games[UID].make_move(r,c, bot_games[UID].current_player)
         bot_games[UID].winner = bot_games[UID].is_win()
             
         # 結束遊戲

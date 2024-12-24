@@ -67,7 +67,7 @@ class DotsAndBox():
         except Exception as e:
             print(f"Unexpected error: {e}")
      
-    def getValidMoves(self):
+    def getValidMoves(self,player=None):
         ValidMoves = []
         for i in range(self.board_rows_nums):
             for j in range(self.board_cols_nums):
@@ -104,7 +104,7 @@ class DotsAndBox():
                     box_filled = True
         return box_filled
   
-    def make_move(self,row,col,player):
+    def make_move(self,row,col,player=None):
         if not self.is_valid(r = row,c = col):
             return
         self.board[row][col] = player
