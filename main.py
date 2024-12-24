@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 from pathlib import Path
 from datetime import datetime
-from Database.Methods import Check_Username
+from Database.Methods import *
 current_time = datetime.now().timestamp()
 app = FastAPI()
 
@@ -63,6 +63,7 @@ async def get_user_historyBIDs(request: Request):
     UID = request.headers.get("UID")
     #資料庫
     # 這邊取得UID裡面的所有BID紀錄，並存成dict list
+    replay_data = Get_Replay(UID)
     # 還要從UB取得UID1跟UID2的username, (UID1->username1, UID2->username2)
     # BIDs = {
     #     BID1: {
@@ -70,7 +71,7 @@ async def get_user_historyBIDs(request: Request):
     #         "player1": username1,
     #         "player2": username2,
     #         "uid1": UID1,
-    #         "uid2": UID2,     
+    #         "uid2": UID2,      
     #         "state": state
     #     },
     #     BID2: {
@@ -83,30 +84,11 @@ async def get_user_historyBIDs(request: Request):
     #     }
     #     ....
     # }
-    BIDs = {
-        "1": {
-            "GID": 1,
-            "player1": "user1",
-            "player2": "user2",
-            "uid1": "1",
-            "uid2": "2", 
-            "path": "/static/Log/GO_log/game_log.json",    
-            "state": -1
-        },
-        "2": {
-            "GID": 2,
-            "player1": "user3",
-            "player2": "user1",
-            "uid1": "3",
-            "uid2": "1", 
-            "path": "/static/Log/Gomoku_log/game_log.json",   
-            "state": 1
-        }
-    }
     
-    save_replay_boards_to_json(BIDs,UID)
     
-    return BIDs
+    save_replay_boards_to_json(replay_data,UID)
+    
+    return replay_data
 
 @app.get("/SelectReplayBoard",response_class=HTMLResponse)
 async def SelectPeplay(request: Request):
@@ -154,6 +136,16 @@ def save_record_to_json(Record_data, UID):
 @app.get("/profile", response_class=HTMLResponse)
 async def profilepage(request: Request, UID: str):
     
+    record_data = {}
+    for i in range(1,5):
+        data  = Get_Records(f'{i}_{UID}',['Total','Win','Lose','Draw','Unfinish'])
+        record_data[i]={
+            "total": data[0][0],
+            "win": data[0][1],
+            "lose": data[0][2],
+            "draw": data[0][3],
+            "unfinish": data[0][4]  
+        }
     # 資料庫Record: 透過路徑參數UID查找此user所有遊戲的戰績紀錄並存成json
     # 如下
     # {
@@ -191,32 +183,7 @@ async def profilepage(request: Request, UID: str):
     #         } => 點格棋
     #     }
     
-    record_data = {
-                "1" :{
-                    "total": 2,
-                    "win": 0,
-                    "lose": 2,
-                    "unfinish": 0
-                },
-                "2" :{
-                    "total": 2,
-                    "win": 0,
-                    "lose": 2,
-                    "unfinish": 0
-                },
-                "3" :{
-                    "total": 2,
-                    "win": 2,
-                    "lose": 0,
-                    "unfinish": 0
-                },
-                "4" :{
-                    "total": 2,
-                    "win": 0,
-                    "lose": 2,
-                    "unfinish": 0
-                }
-            }
+    
     save_record_to_json(record_data, UID)
     return templates.TemplateResponse("user_profile.html", {"request": request, "time": current_time})
 
@@ -319,5 +286,5 @@ async def replayBoard(request: Request, GID: int):
 if __name__ == "__main__":
     # IP = "10.106.38.184"    #ncnu wifi
     # IP = "192.168.0.133"    #澤生居 wifi
-    IP = "127.0.0.1"
+    IP = "192.168.2.11"
     uvicorn.run("main:app",host=IP,port=8080,reload=True)

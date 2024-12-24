@@ -1,6 +1,6 @@
 // const IP = "10.106.38.184";
 // const IP = "192.168.0.133";
-const IP = "localhost"
+const IP = "192.168.2.11"
 const ws = new WebSocket(`ws://${IP}:8765`);
 const chatBox = document.getElementById("chat-box");
 const messageContainer = document.getElementById("message-container");
