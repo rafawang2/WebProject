@@ -119,7 +119,7 @@ def evaluate_board(board, color):
     opponent_count = np.sum(board == -color)
     return player_count - opponent_count
 
-class AlphaBeta():
+class OthelloAlphaBeta():
     #set the infinity
     INFINITY = float('inf')
     WEIGHTS = [4, -3, 2, 2, 2, 2, -3, 4,
@@ -146,9 +146,9 @@ class AlphaBeta():
         number of pieces for that color. """
         board = np.array(board)
         if (self.alpha_beta == False):
-            score, finalmove = self._minmax(board, color, AlphaBeta.ply_maxmin)
+            score, finalmove = self._minmax(board, color, OthelloAlphaBeta.ply_maxmin)
         else:
-            score, finalmove = self._minmax_with_alpha_beta(board, color, AlphaBeta.ply_alpha)
+            score, finalmove = self._minmax_with_alpha_beta(board, color, OthelloAlphaBeta.ply_alpha)
         r, c = finalmove
         return (r,c)
         #maxmin function created by hyl
@@ -159,7 +159,7 @@ class AlphaBeta():
            return score,None
 
         return_move = moves[0]
-        bestscore = - AlphaBeta.INFINITY
+        bestscore = - OthelloAlphaBeta.INFINITY
         
         for move in moves:
             newboard = deepcopy(board)
@@ -171,7 +171,7 @@ class AlphaBeta():
                 return_move = move
         return (bestscore,return_move)
 
-    #MAX_VALUE = AlphaBeta.INFINITY
+    #MAX_VALUE = OthelloAlphaBeta.INFINITY
     #MIN_VALUE = -MAX_VALUE
 
 
@@ -180,7 +180,7 @@ class AlphaBeta():
         
         if ply == 0:
            return self.heuristic(board, color)
-        bestscore = -AlphaBeta.INFINITY
+        bestscore = -OthelloAlphaBeta.INFINITY
         for move in moves:     
             newboard = deepcopy(board)
             executeMove(newboard,color,move)
@@ -193,12 +193,12 @@ class AlphaBeta():
         moves = getValidMoves(board,color)
         if ply == 0:
            return self.heuristic(board, color)
-        bestscore = AlphaBeta.INFINITY
+        bestscore = OthelloAlphaBeta.INFINITY
         for move in moves:
-            if move in AlphaBeta.node_list:
-                AlphaBeta.num_dup += 1
-            if move not in AlphaBeta.node_list:
-                AlphaBeta.node_list.append(move)
+            if move in OthelloAlphaBeta.node_list:
+                OthelloAlphaBeta.num_dup += 1
+            if move not in OthelloAlphaBeta.node_list:
+                OthelloAlphaBeta.node_list.append(move)
             newboard = deepcopy(board)
             executeMove(newboard,color,move)
             score = self.max_score(newboard, -color, ply-1)
@@ -219,13 +219,13 @@ class AlphaBeta():
 
         #print ply
         return_move = moves[0]
-        bestscore = - AlphaBeta.INFINITY
+        bestscore = - OthelloAlphaBeta.INFINITY
         
         for move in moves:
             newboard = deepcopy(board)
             executeMove(newboard,color,move)
-            AlphaBeta.branch_list[0] +=1
-            score = self.min_score_alpha_beta(newboard, -color, ply-1, -AlphaBeta.INFINITY, AlphaBeta.INFINITY)
+            OthelloAlphaBeta.branch_list[0] +=1
+            score = self.min_score_alpha_beta(newboard, -color, ply-1, -OthelloAlphaBeta.INFINITY, OthelloAlphaBeta.INFINITY)
             if score > bestscore:
                bestscore = score
                return_move = move
@@ -234,9 +234,9 @@ class AlphaBeta():
 
     def max_score_alpha_beta(self, board, color, ply, alpha, beta):
         if ply == 0:
-            AlphaBeta.num_node +=1
+            OthelloAlphaBeta.num_node +=1
             return self.heuristic(board, color)
-        bestscore = -AlphaBeta.INFINITY
+        bestscore = -OthelloAlphaBeta.INFINITY
         for move in getValidMoves(board,color):
             
             newboard = deepcopy(board)
@@ -252,7 +252,7 @@ class AlphaBeta():
     def min_score_alpha_beta(self, board, color, ply, alpha, beta):
           if ply == 0:
              return self.heuristic(board, color)
-          bestscore = AlphaBeta.INFINITY
+          bestscore = OthelloAlphaBeta.INFINITY
           for move in getValidMoves(board, color):
               newboard = deepcopy(board)
               executeMove(newboard,color,move)
@@ -271,9 +271,9 @@ class AlphaBeta():
         total = 0
         for i in range(64):
             if board[i // 8][i % 8] == color:
-                total += AlphaBeta.WEIGHTS[i]
+                total += OthelloAlphaBeta.WEIGHTS[i]
             elif board[i // 8][i % 8] == -color:
-                total -= AlphaBeta.WEIGHTS[i]
+                total -= OthelloAlphaBeta.WEIGHTS[i]
         return total
 
     def get_squares(self,board,color):

@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime
 
 from GameLogics.OthelloGame import OthelloGame
-from GameLogics.bots.AlphaBetaOthello import AlphaBeta
+from GameLogics.bots.AlphaBetaOthello import OthelloAlphaBeta
 
 from Database.Methods import *
 current_time = datetime.now().timestamp()
@@ -322,7 +322,7 @@ async def get_bot_move(request: Request, UID: str):
     if UID not in bot_games:
         bot_games[UID] = OthelloGame(8)
     # bot下的座標
-    r, c = AlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
+    r, c = OthelloAlphaBeta().getAction(bot_games[UID].board, bot_games[UID].current_player)
     permission = "BOT"
     if bot_games[UID].current_player==1:
         last_player = bot_games[UID].current_player

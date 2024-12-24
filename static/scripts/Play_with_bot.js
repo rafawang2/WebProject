@@ -55,6 +55,18 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(data => {
         console.log(data)
         if (data.winner != 2) {
+            if (winner === -1) {
+                player1Element.classList.add('winner');
+                player2Element.classList.remove('winner');
+            }
+            else if (winner === 0) {
+                player1Element.classList.add('winner');
+                player2Element.classList.add('winner');
+            }
+            else if (winner === 1) {
+                player1Element.classList.remove('winner');
+                player2Element.classList.add('winner');
+            }
             is_myTurn = false; // 遊戲結束，禁止點擊
             board = data.board;
             winner = data.winner;
@@ -93,6 +105,9 @@ window.addEventListener("beforeunload", function(event) {
 // 根據GID調整顯示版面
 function initReplayBoard() 
 {
+    player1Element.textContent = username;
+    player2Element.textContent = "BOT";
+
     if (GID === "1")
     {
         console.log("圍棋!!!");
@@ -177,6 +192,11 @@ function handleClick(row, col) {
             drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
             
             if(data.permission === "Human") {
+                setTimeout(() => {
+                    // 這裡可以確保更新過後的效果
+                    player1Element.classList.add('current-player');
+                    player2Element.classList.remove('current-player');
+                }, 0); // 延遲 0 毫秒強制重繪
                 msg = {
                     "sender": "Server",
                     "message": `Your turn`
@@ -193,6 +213,11 @@ function handleClick(row, col) {
                 drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
             }
             else if (data.permission === "BOT") {
+                setTimeout(() => {
+                    // 這裡可以確保更新過後的效果
+                    player1Element.classList.remove('current-player');
+                    player2Element.classList.add('current-player');
+                }, 0); // 延遲 0 毫秒強制重繪
                 msg = {
                     "sender": "Server",
                     "message": `Bot's turn`
@@ -220,6 +245,18 @@ function get_bot_move() {
             is_myTurn = false; // 遊戲結束，禁止點擊
             board = data.board;
             winner = data.winner;
+            if (winner === -1) {
+                player1Element.classList.add('winner');
+                player2Element.classList.remove('winner');
+            }
+            else if (winner === 0) {
+                player1Element.classList.add('winner');
+                player2Element.classList.add('winner');
+            }
+            else if (winner === 1) {
+                player1Element.classList.remove('winner');
+                player2Element.classList.add('winner');
+            }
             drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
 
             msg = {
@@ -236,6 +273,12 @@ function get_bot_move() {
             // 繪製棋盤的函數應在數據獲取後執行
             drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
             if(data.permission === "Human") {
+                setTimeout(() => {
+                    // 這裡可以確保更新過後的效果
+                    player1Element.classList.add('current-player');
+                    player2Element.classList.remove('current-player');
+                }, 0); // 延遲 0 毫秒強制重繪
+
                 msg = {
                     "sender": "Server",
                     "message": `Your turn`
@@ -251,6 +294,11 @@ function get_bot_move() {
                 drawBoard(ctx, canvas, GID, board, offset, gap, radius, len); // 更新棋盤畫面
             }
             else if (data.permission === "BOT") {
+                setTimeout(() => {
+                    // 這裡可以確保更新過後的效果
+                    player1Element.classList.remove('current-player');
+                    player2Element.classList.add('current-player');
+                }, 0); // 延遲 0 毫秒強制重繪
                 msg = {
                     "sender": "Server",
                     "message": `Bot's turn`
