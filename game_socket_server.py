@@ -16,7 +16,7 @@ IP = "192.168.2.11"
 game_classes = {
     1: lambda: Gomoku_game(19),
     2: lambda: Gomoku_game(15),
-    3: lambda: OthelloGame(10),
+    3: lambda: OthelloGame(8),
     4: lambda: DotsAndBox(5,5)
 }
 

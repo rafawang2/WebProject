@@ -84,11 +84,11 @@ function initReplayBoard()
     else if (GID === "3")
     {
         console.log("黑白棋!!!");
-        board = Array.from({ length: 10 }, () => Array(10).fill(0));
-        board[5][5] = 1;
+        board = Array.from({ length: 8 }, () => Array(8).fill(0));
         board[4][4] = 1;
-        board[4][5] = -1;
-        board[5][4] = -1;
+        board[3][3] = 1;
+        board[3][4] = -1;
+        board[4][3] = -1;
         gap = len/(board[0].length); // 每個格子的大小
         radius = 10;
     }
