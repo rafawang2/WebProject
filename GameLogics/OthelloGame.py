@@ -131,7 +131,10 @@ class OthelloGame():
         if self.is_valid(r, c):
             self.executeMove((r, c))
             self.log_move(self.board, player, r, c)
-            self.current_player=-self.current_player
+            # 新增檢查下一位的合法步
+            next_player_valids = self.getValidMoves(-self.current_player)
+            if next_player_valids:
+                self.current_player=-self.current_player    # 換下一位
         else:
             raise Exception('invalid move')
     
