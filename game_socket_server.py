@@ -446,7 +446,7 @@ async def broadcast_in_room(GID, room_id, message):
     for websocket,_, UID in rooms[GID][room_id]["users"]:
         await websocket.send(message)
     if rooms[GID][room_id]["visitors"]:
-        for websocket,_ in rooms[GID][room_id]["visitors"]:
+        for websocket,_, UID in rooms[GID][room_id]["visitors"]:
             await websocket.send(message)
     
 
@@ -459,7 +459,7 @@ async def broadcast_board_in_room(GID, room_id, board):
     for websocket,_,UID in rooms[GID][room_id]["users"]:
         await websocket.send(json.dumps(board_data))
     if rooms[GID][room_id]["visitors"]:
-        for websocket,_ in rooms[GID][room_id]["visitors"]:
+        for websocket,_, UID in rooms[GID][room_id]["visitors"]:
             await websocket.send(json.dumps(board_data))
 # 決定先手是誰
 def first_play():
