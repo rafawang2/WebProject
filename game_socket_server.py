@@ -9,9 +9,9 @@ from GameLogics.OthelloGame import OthelloGame
 from GameLogics.Dots_and_Box import DotsAndBox
 
 from Database.Methods import *
-IP = "10.106.38.184"
+IP = "10.106.27.173"
 # IP = "192.168.0.133"
-IP = "192.168.2.11"
+# IP = "192.168.2.11"
 # 定義一個字典，映射 GID 到對應的遊戲類別
 game_classes = {
     1: lambda: Gomoku_game(19),

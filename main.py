@@ -239,20 +239,18 @@ async def create_room(request: Request):
         return {"success": False, "message": "room_id not provided"}
 
 
-# 將當前login的user的名字存入user_data
+# 將當前login的user的名字存入user_data 
 @app.post("/save_name")
 async def save_name(request: Request):
     user_name = request.headers.get("username")
-    print(user_name)
     if not user_name:
-        return {"success": False, "error": "Username is required"}
+        return JSONResponse(content={"success": False, "error": "Username is required"})
     
-   
     # 資料庫串接: 檢查user_name是否在資料庫，如果在，回傳username對應的UID，如果不在就建立新的User跟Record
-    UID = Check_Username(user_name)
-    
-    # 回傳UID，讓UID存在session storage，使其他的page可以存取
-    return {"success": True, "UID": UID}
+    #UID = Check_Username(user_name)
+    response = {"success": True, "UID": '123456'}
+    print("Response:", response)  # 調試輸出
+    return JSONResponse(content={"success": True, "UID": '123456'}) 
 
 
 # 刪除房間的API
@@ -386,7 +384,7 @@ async def handle_coordinate(request: Request, UID: str):
     return {"board": bot_games[UID].board, "valid_moves": valids, "permission": permission, "winner": bot_games[UID].winner}
         
 if __name__ == "__main__":
-    IP = "10.106.38.184"    #ncnu wifi
+    IP = "10.106.27.173"    #ncnu wifi
     # IP = "192.168.0.133"    #澤生居 wifi
     # IP = "192.168.2.11"
     # IP = 127.0.0.1

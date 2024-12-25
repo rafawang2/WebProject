@@ -6,8 +6,9 @@ const userNameKey = "user_name"; // 儲存使用者名字的欄位
 
 document.addEventListener("DOMContentLoaded", function () {
     let userName = sessionStorage.getItem(userNameKey);
+    let UID = sessionStorage.getItem("UID");
     console.log(`${userName}`)
-    if (userName) {
+    if (userName && UID) {
         window.location.href = '/home';
     }
 });
@@ -33,30 +34,34 @@ loginButton.addEventListener("click", () => {
     sessionStorage.setItem(userNameKey, inputUserName);
     save_name(inputUserName)
     console.log(inputUserName)
-    window.location.href = '/home'; // 成功後跳轉
 });
 
-function save_name(username) {
-    fetch("/save_name", {
+async function save_name(username) {
+    await fetch("/save_name", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "username": username,
-        },
-        body: JSON.stringify({})  // We don't need to send any data in the request body
-    })
-    .then(response => response.json())  // Parse the JSON response
-    .then(data => {
-        if (data.success) {
-            console.log("Login successful")
-            const UID = data.UID;
-            sessionStorage.setItem("UID", UID);
-        } else {
-            alert("Error saving name");
+            "username": username
         }
     })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json()
+    })
+    .then(data => {
+        console.log("Response data:", data); // 確認收到的數據
+        const UID = data.UID;
+        sessionStorage.setItem("UID", UID);
+        if(!UID)
+            window.location.href = '/login';
+        else
+            window.location.href = '/home'
+        
+    })
     .catch(error => {
-        console.error("Error:", error);
+        console.error("Error occurred during fetch:", error);
         alert("An error occurred while saving name.");
     });
 }

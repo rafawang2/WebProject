@@ -55,7 +55,7 @@ async function loadHTML() {
 // 取得使用者名稱
 document.addEventListener("DOMContentLoaded", function () {
     const userNameKey = "user_name"; // 儲存使用者名字的欄位
-    let userName = sessionStorage.getItem(userNameKey);
+    let userName = sessionStorage.getItem("UID");
     console.log(`${userName}`)
     if (!userName) {
         window.location.href = '/login';
