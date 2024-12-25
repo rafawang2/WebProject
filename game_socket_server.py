@@ -423,7 +423,7 @@ async def chat_handler(websocket):
                 if current_room in fighting_users[GID]:
                     del fighting_users[GID][current_room]
             
-                if rooms[GID][room_id]["status"] == 3:
+                if rooms[GID][room_id]["status"] == 3 and rooms[GID][room_id]["status"] != 4:
                     file_path = GID_path[GID]
                     # file_path要改成路徑+BID
                     BID = rooms[GID][room_id]["BID"]
