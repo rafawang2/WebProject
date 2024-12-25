@@ -5,6 +5,17 @@ let username = null;
 let UID = sessionStorage.getItem("UID");  //取得UID，方便存資料庫UB
 if(!UID)
     UID ="0800"
+
+// 隱藏圍棋跟五子棋機器人按鈕 (尚未開發)
+tobotroom_button = document.getElementById("tobotroom");
+if (GID === "1" || GID === "2") {
+    tobotroom_button.style.display = "none";
+}
+else {
+    tobotroom_button.style.display = "block";
+}
+
+
 let exist_rooms = roomIds;
 
 function toBotRoom() {

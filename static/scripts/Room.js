@@ -1,6 +1,6 @@
-// const IP = "10.106.38.184";
+const IP = "10.106.38.184";
 // const IP = "192.168.0.133";
-const IP = "192.168.2.11"
+// const IP = "192.168.2.11"
 const ws = new WebSocket(`ws://${IP}:8765`);
 const chatBox = document.getElementById("chat-box");
 const messageContainer = document.getElementById("message-container");
@@ -10,7 +10,6 @@ const player2Element = document.getElementById("player2");
 const userNameKey = "user_name"; // 儲存使用者名字的欄位
 username = sessionStorage.getItem(userNameKey);
 const UID = sessionStorage.getItem("UID");  //取得UID，方便存資料庫UB
-
 
 let players = null;
 
