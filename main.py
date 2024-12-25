@@ -1,7 +1,6 @@
 import uvicorn, json
-from pydantic import BaseModel
 from fastapi import FastAPI, Request, File, UploadFile
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse, FileResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -12,8 +11,8 @@ from GameLogics.OthelloGame import OthelloGame
 from GameLogics.bots.AlphaBetaOthello import OthelloAlphaBeta
 from GameLogics.Dots_and_Box import DotsAndBox
 from GameLogics.bots.DaB_MCTS import MCTSPlayer
-
 from Database.Methods import *
+
 current_time = datetime.now().timestamp()
 app = FastAPI()
 
@@ -70,28 +69,6 @@ async def get_user_historyBIDs(request: Request):
     #資料庫
     # 這邊取得UID裡面的所有BID紀錄，並存成dict list
     replay_data = Get_Replay(UID)
-    # 還要從UB取得UID1跟UID2的username, (UID1->username1, UID2->username2)
-    # BIDs = {
-    #     BID1: {
-    #         "GID": GID,
-    #         "player1": username1,
-    #         "player2": username2,
-    #         "uid1": UID1,
-    #         "uid2": UID2,      
-    #         "state": state
-    #     },
-    #     BID2: {
-    #         "GID": GID,
-    #         "player1": username1,
-    #         "player2": username2,
-    #         "uid1": UID1,
-    #         "uid2": UID2, 
-    #         "state": state
-    #     }
-    #     ....
-    # }
-    
-    
     save_replay_boards_to_json(replay_data,UID)
     
     return replay_data
@@ -152,44 +129,6 @@ async def profilepage(request: Request, UID: str):
             "draw": data[0][3],
             "unfinish": data[0][4]  
         }
-    # 資料庫Record: 透過路徑參數UID查找此user所有遊戲的戰績紀錄並存成json
-    # 如下
-    # {
-    #     GID: {
-    #         "total": Record[GID][UID][total],
-    #         "win": Record[GID][UID][win],
-    #         "lose": Record[GID][UID][lose],
-    #         "unfinish": Record[GID][UID][unfinish]
-    #     }
-    # }
-    # record_data = {
-    #         1 :{
-    #             "total": 2,
-    #             "win": 0,
-    #             "lose": 2,
-    #             "unfinish": 0
-    #         }, => 圍棋
-    #         2 :{
-    #             "total": 2,
-    #             "win": 0,
-    #             "lose": 2,
-    #             "unfinish": 0
-    #         }, => 五子棋
-    #         3 :{
-    #             "total": 2,
-    #             "win": 2,
-    #             "lose": 0,
-    #             "unfinish": 0
-    #         }, => 黑白棋
-    #         4 :{
-    #             "total": 2,
-    #             "win": 0,
-    #             "lose": 2,
-    #             "unfinish": 0
-    #         } => 點格棋
-    #     }
-    
-    
     save_record_to_json(record_data, UID)
     return templates.TemplateResponse("user_profile.html", {"request": request, "time": current_time})
 
@@ -247,10 +186,8 @@ async def save_name(request: Request):
         return JSONResponse(content={"success": False, "error": "Username is required"})
     
     # 資料庫串接: 檢查user_name是否在資料庫，如果在，回傳username對應的UID，如果不在就建立新的User跟Record
-    #UID = Check_Username(user_name)
-    response = {"success": True, "UID": '123456'}
-    print("Response:", response)  # 調試輸出
-    return JSONResponse(content={"success": True, "UID": '123456'}) 
+    UID = Check_Username(user_name)
+    return JSONResponse(content={"success": True, "UID": UID}) 
 
 
 # 刪除房間的API
@@ -384,7 +321,7 @@ async def handle_coordinate(request: Request, UID: str):
     return {"board": bot_games[UID].board, "valid_moves": valids, "permission": permission, "winner": bot_games[UID].winner}
         
 if __name__ == "__main__":
-    IP = "10.106.27.173"    #ncnu wifi
+    IP = "26.136.58.171"    #ncnu wifi
     # IP = "192.168.0.133"    #澤生居 wifi
     # IP = "192.168.2.11"
     # IP = 127.0.0.1
