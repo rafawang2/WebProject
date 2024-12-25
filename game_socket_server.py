@@ -9,7 +9,7 @@ from GameLogics.OthelloGame import OthelloGame
 from GameLogics.Dots_and_Box import DotsAndBox
 
 from Database.Methods import *
-IP = "10.106.27.173"
+IP = "10.99.1.194"
 # IP = "192.168.0.133"
 # IP = "192.168.2.11"
 # 定義一個字典，映射 GID 到對應的遊戲類別
@@ -81,7 +81,9 @@ async def chat_handler(websocket):
                         "message":[],
                         "game": game_classes.get(GID, lambda: None)(),  # 默認為 None
                         "winner": 2 ,# 遊戲進行中
-                        "BID":""
+                        "BID":"",
+                        "RID":[]
+                        
                     }              
                     rooms[GID][room_id]["users"].append((websocket, username, UID))
                     current_room = room_id
@@ -137,6 +139,8 @@ async def chat_handler(websocket):
                             "Player2":rooms[GID][room_id]["users"][1][2]
                         }
                         Create_Data("UB",ub) 
+                        rooms[GID][room_id]["RID"].append(f'{GID}_{rooms[GID][room_id]["users"][0][2]}')
+                        rooms[GID][room_id]["RID"].append(f'{GID}_{rooms[GID][room_id]["users"][1][2]}')
                         # 先加入的人自動獲得權限
                         fighting_users[GID][current_room].append(0)  #fighting_users[GID][current_room][fighting_users[GID][current_room][2]]有權限
                         permission_holder_idx = fighting_users[GID][current_room][2]
@@ -373,7 +377,7 @@ async def chat_handler(websocket):
                 sender = data["sender"]
                 await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{sender} has left the room"))
                 # 當有人斷線並且是對戰中的玩家且狀態為對戰中
-                if sender in rooms[GID][room_id]["users"][0] or rooms[GID][room_id]["users"][1] and rooms[GID][room_id]["status"] == 2:
+                if (sender in rooms[GID][room_id]["users"][0] or rooms[GID][room_id]["users"][1]) and rooms[GID][room_id]["status"] == 2 :
                     rooms[GID][room_id]["status"] = 3   # 等待斷線重連
                 
                 print(f"Action: {action} Room: {room_id} User: {sender}")
@@ -387,11 +391,22 @@ async def chat_handler(websocket):
         if current_room and username:
             print(f"{username} left")
 
-
-            # if rooms[GID][room_id]["status"] == 2:
+            # file_path要改成路徑+BID
+            BID = ""
+            RID1 = ""
+            RID2 = ""
+            file_path = ""
             
             # 判斷離開者並移除rooms結構移除
             if (websocket, username,UID) in rooms[GID][current_room]["users"]:
+                BID = rooms[GID][room_id]["BID"]
+                file_name = f"{BID}.json"
+                file_path += file_name
+            
+                RID1 = rooms[GID][room_id]["RID"][0]
+                RID2 = rooms[GID][room_id]["RID"][1]
+                
+                
                 rooms[GID][current_room]["users"].remove((websocket, username, UID))
             elif (websocket, username, UID) in rooms[GID][current_room]["visitors"]:
                 rooms[GID][current_room]["visitors"].remove((websocket, username, UID))
@@ -404,30 +419,22 @@ async def chat_handler(websocket):
             
                 if rooms[GID][room_id]["status"] == 3:
                     rooms[GID][room_id]["status"] = 4   # 斷線，且僅存玩家也離開，宣告結束
-                    # file_path要改成路徑+BID
-                    BID = rooms[GID][room_id]["BID"]
-                    file_name = f"{BID}.json"
-                    file_path += file_name
-                    
                     Update_Table("Boards",{"Steps":file_path,"State":3},{"BoardID":BID})
                     
-                    RID = f'{GID}_{rooms[GID][room_id]["users"][0][2]}'
-                    rows = Get_Records(RID,['Unfinish','Total'])
+                    rows = Get_Records(RID1,['Unfinish','Total'])
                     data = {
                         "Unfinish":rows[0][0] +1,
                         "Total":rows[0][1] +1
                     }
-                    Update_Table("Records",data,{"RecordID":RID})
+                    Update_Table("Records",data,{"RecordID":RID1})
                     
-                    # Record[UserID = UID2][GameID = GID][Unfinish] += 1
-                    # Record[UserID = UID1][GameID = GID][Total] += 1
-                    RID = f'{GID}_{rooms[GID][room_id]["users"][1][2]}'
-                    rows = Get_Records(RID,['Unfinish','Total'])
+                    rows = Get_Records(RID2,['Unfinish','Total'])
                     data = {
                         "Unfinish":rows[0][0] +1,
                         "Total":rows[0][1] +1
                     }
-                    Update_Table("Records",data,{"RecordID":RID})
+                    Update_Table("Records",data,{"RecordID":RID2})
+                    
                     rooms[GID][current_room]["game"].save_log_to_json(file_path)
                     print("中離存檔")    
                 

@@ -1,4 +1,4 @@
-const IP = "10.106.27.173";
+const IP = "10.99.1.194";
 // const IP = "192.168.0.133";
 // const IP = "192.168.2.11"
 const ws = new WebSocket(`ws://${IP}:8765`);

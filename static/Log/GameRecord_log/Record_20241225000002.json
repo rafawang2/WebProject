@@ -1,0 +1,32 @@
+{
+    "record": {
+        "1": {
+            "total": 0,
+            "win": 0,
+            "lose": 0,
+            "draw": 0,
+            "unfinish": 0
+        },
+        "2": {
+            "total": 0,
+            "win": 0,
+            "lose": 0,
+            "draw": 0,
+            "unfinish": 0
+        },
+        "3": {
+            "total": 0,
+            "win": 0,
+            "lose": 0,
+            "draw": 0,
+            "unfinish": 0
+        },
+        "4": {
+            "total": 5,
+            "win": 2,
+            "lose": 0,
+            "draw": 1,
+            "unfinish": 2
+        }
+    }
+}

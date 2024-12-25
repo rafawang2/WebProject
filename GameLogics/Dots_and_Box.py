@@ -108,9 +108,9 @@ class DotsAndBox():
         if not self.is_valid(r = row,c = col):
             return
         self.board[row][col] = player
-        self.log_move(self.board, player, row, col)
         if not self.checkBox(board=self.board):    #沒有完成方形就換人
             self.current_player *= -1   #沒有完成方格，換下一人
+        self.log_move(self.board, player, row, col)
 
     def isGameOver(self):
         for i in range(self.input_m - 1):
