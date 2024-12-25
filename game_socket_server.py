@@ -249,6 +249,7 @@ async def chat_handler(websocket):
                             # 資料庫: 後手玩家: UID2: rooms[GID][room_id]["users"][1][2]
                             
                             game.save_log_to_json(file_path)
+                            print("遊戲結束，存檔")   
                             result_data= {
                                         "action": "get_result",
                                         "result": winner
@@ -366,7 +367,7 @@ async def chat_handler(websocket):
                 room_id = data["room_id"]
                 sender = data["sender"]
                 await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{sender} has left the room"))
-                # 當有人斷線並且是對戰中的玩家
+                # 當有人斷線並且是對戰中的玩家且狀態為對戰中
                 if sender in rooms[GID][room_id]["users"][0] or rooms[GID][room_id]["users"][1] and rooms[GID][room_id]["status"] == 2:
                     rooms[GID][room_id]["status"] = 3   # 等待斷線重連
                 
@@ -428,7 +429,8 @@ async def chat_handler(websocket):
                     BID = rooms[GID][room_id]["BID"]
                     file_name = f"{BID}.json"
                     file_path += file_name
-                    rooms[GID][current_room]["game"].save_log_to_json(file_path)    
+                    rooms[GID][current_room]["game"].save_log_to_json(file_path)
+                    print("中離存檔")    
                 
                 # 房間內沒人時刪除房間                
                 del rooms[GID][current_room]
