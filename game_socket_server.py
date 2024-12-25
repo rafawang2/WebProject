@@ -388,6 +388,7 @@ async def chat_handler(websocket):
     
     # 斷線or異常
     finally:
+        print(rooms[GID][current_room]["status"])
         if current_room and username:
             print(f"{username} left")
 
