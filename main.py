@@ -120,7 +120,7 @@ def save_record_to_json(Record_data, UID):
 async def profilepage(request: Request, UID: str):
     
     record_data = {}
-    for i in range(1,5):
+    for i in range(2,5):
         data  = Get_Records(f'{i}_{UID}',['Total','Win','Lose','Draw','Unfinish'])
         record_data[i]={
             "total": data[0][0],

@@ -478,7 +478,7 @@ def format_message(sender,action,message):
     return json.dumps({"sender": sender,"action": action, "message": message})
 
 async def main():
-    print("WebSocket server is running...")
+    print("遊戲伺服器啟動!!!")
     async with websockets.serve(chat_handler, IP, 8765):
         await asyncio.Future()  # 永遠運行
 
