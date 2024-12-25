@@ -52,9 +52,9 @@ document.addEventListener("DOMContentLoaded", function () {
             let GameType = "";
             if (GID === "1") {
                 GameType = "圍棋";
-            } else if (GID === "2") {
-                GameType = "黑白棋";
             } else if (GID === "3") {
+                GameType = "黑白棋";
+            } else if (GID === "2") {
                 GameType = "五子棋";
             } else if (GID === "4") {
                 GameType = "點格棋";
@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p>總場數：${board.total}</p>
                 <p>勝場：${board.win}</p>
                 <p>敗場：${board.lose}</p>
+                <p>平手：${board.draw}</p>
                 <p>未完成：${board.unfinish}</p>
             `;
             Record_container.appendChild(boardItem);
