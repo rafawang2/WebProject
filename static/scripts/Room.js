@@ -89,7 +89,7 @@ function initReplayBoard()
         board[3][4] = -1;
         board[4][3] = -1;
         gap = len/(board[0].length); // 每個格子的大小
-        radius = 10;
+        radius = 20;
     }
     else if (GID === "2")
     {

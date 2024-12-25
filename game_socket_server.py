@@ -12,8 +12,8 @@ from Database.Methods import *
 IP = "10.99.1.194"
 # IP = "192.168.0.133"
 # IP = "192.168.2.11"
-# 定義一個字典，映射 GID 到對應的遊戲類別
 
+# 定義一個字典，映射 GID 到對應的遊戲類別
 # status = 1: 等待對手加入, 2: 對戰進行中, 3: 一人斷線，等待重新連線, 4: 遊戲結束(雙方斷線or遊戲正常結束)
 
 game_classes = {
@@ -154,7 +154,7 @@ async def chat_handler(websocket):
                             permission_socket = assignPermission(rooms[GID], permission_holder, room_id)     
                             await permission_socket.send(format_message("Server","get_location","is your turn"))
                             await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
-                             # 如果需要，先送可走棋給前端
+                            # 如果需要，先送可走棋給前端
                             if GID == 3:    #黑白棋
                                 valids = rooms[GID][room_id]["game"].getValidMoves(rooms[GID][room_id]["game"].current_player)
                                 valids_data = {
@@ -200,16 +200,15 @@ async def chat_handler(websocket):
                                 await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         
                     else:   #當房間已有兩人，其餘人都設為旁觀者
+                        rooms[GID][room_id]["visitors"].append((websocket, username,UID))
                         # 告知觀戰目前對弈玩家
                         players_data = {
                             "action": "get_players",
                             "players": fighting_users[GID][room_id][:2]
                         }
                         await broadcast_in_room(GID, room_id, json.dumps(players_data))
-                        
                         await broadcast_board_in_room(GID, room_id, rooms[GID][room_id]["game"].board)
                         print(f"{username}作為觀戰者加入{room_id}")
-                        rooms[GID][room_id]["visitors"].append((websocket, username,UID))
                         await broadcast_in_room(GID, current_room, format_message("Server", "display_msg", f"{username}作為觀戰者加入房間{room_id}"))
 
             # 接收用戶傳送座標
