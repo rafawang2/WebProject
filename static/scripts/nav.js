@@ -47,6 +47,27 @@ async function loadHTML() {
             });
         });
 
+
+        const UID = sessionStorage.getItem("UID"); // 從 sessionStorage 取得 UID
+        const userImg = document.getElementById("user_img");
+
+        if (UID) {
+            const imageUrl = `/static/images/users/${UID}.png`;
+
+            // 發送 HEAD 請求檢查文件是否存在
+            fetch(imageUrl, { method: "HEAD" })
+                .then(response => {
+                    if (response.ok) {
+                        userImg.src = imageUrl; // 如果存在，更新圖片位置
+                    } else {
+                        console.warn("User image not found, using default.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking user image:", error);
+                });
+        }
+
     } catch (error) {
         console.error("Error loading HTML:", error);
     }
@@ -63,26 +84,4 @@ document.addEventListener("DOMContentLoaded", function () {
     else {
         loadHTML();
     }
-
-
-    const UID = sessionStorage.getItem("UID"); // 從 sessionStorage 取得 UID
-    const userProfileImg = document.getElementById("user_img");
-
-    if (UID) {
-        const imageUrl = `/static/images/users/${UID}.png`;
-
-        // 發送 HEAD 請求檢查文件是否存在
-        fetch(imageUrl, { method: "HEAD" })
-            .then(response => {
-                if (response.ok) {
-                    userProfileImg.src = imageUrl; // 如果存在，更新圖片位置
-                } else {
-                    console.warn("User image not found, using default.");
-                }
-            })
-            .catch(error => {
-                console.error("Error checking user image:", error);
-            });
-    }
-
 });
