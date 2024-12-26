@@ -3,13 +3,19 @@ document.getElementById("upload_button").addEventListener("click", function() {
     document.getElementById("file_input").click();
 });
 
+const UID = sessionStorage.getItem("UID");  // 取得 UID
+const url = `/static/Log/GameRecord_log/Record_${UID}.json`;  // 生成 URL
+
+
+
 //取得用戶的圖片輸入
 document.getElementById("file_input").addEventListener("change", function(event) {
     const file = event.target.files[0]; // 獲取選擇的文件(只取第一個檔案)
     if (file) {
         const formData = new FormData();
+        const UID = sessionStorage.getItem("UID"); // 取得 UID
         formData.append('image', file); // 將圖片附加到表單數據
-
+        formData.append('UID', UID); // 將 UID 附加到表單數據
         // 使用 fetch 發送圖片到 FastAPI 伺服器
         fetch('/upload/', {
             method: 'POST',
@@ -33,12 +39,31 @@ document.getElementById("file_input").addEventListener("change", function(event)
     }
 });
 
-const UID = sessionStorage.getItem("UID");  // 取得 UID
-const url = `/static/Log/GameRecord_log/Record_${UID}.json`;  // 生成 URL
 console.log(url);  // 記錄 URL
 
 // 取得玩家的遊戲紀錄
 document.addEventListener("DOMContentLoaded", function () {
+    const UID = sessionStorage.getItem("UID"); // 從 sessionStorage 取得 UID
+    const userProfileImg = document.getElementById("user_profile_img");
+
+    if (UID) {
+        const imageUrl = `/static/images/users/${UID}.png`;
+
+        // 發送 HEAD 請求檢查文件是否存在
+        fetch(imageUrl, { method: "HEAD" })
+            .then(response => {
+                if (response.ok) {
+                    userProfileImg.src = imageUrl; // 如果存在，更新圖片位置
+                } else {
+                    console.warn("User image not found, using default.");
+                }
+            })
+            .catch(error => {
+                console.error("Error checking user image:", error);
+            });
+    }
+
+
     fetch(url)
     .then(response => response.json())
     .then(data => {

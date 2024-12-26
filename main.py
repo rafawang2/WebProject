@@ -1,5 +1,5 @@
 import uvicorn, json
-from fastapi import FastAPI, Request, File, UploadFile
+from fastapi import FastAPI, Request, File, UploadFile, Form
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -134,15 +134,15 @@ async def profilepage(request: Request, UID: str):
 
 #上傳圖片，將其儲存為 man.png 並返回 URL
 @app.post("/upload/")
-async def upload_image(image: UploadFile = File(...)):
+async def upload_image(image: UploadFile = File(...), UID: str = Form(...)):
     try:
         # 獲取圖片的文件名，並儲存為 man.png
-        file_location = UPLOAD_DIR / "man.png"
+        file_location = UPLOAD_DIR / f"{UID}.png"
         with open(file_location, "wb") as f:
             f.write(await image.read())  # 儲存圖片到伺服器
 
         # 返回儲存的圖片的 URL
-        return JSONResponse(content={"success": True, "image_url": f"/static/images/users/man.png"})
+        return JSONResponse(content={"success": True, "image_url": f"/static/images/users/{UID}.png"})
     except Exception as e:
         return JSONResponse(content={"success": False, "error": str(e)}, status_code=500)
 
