@@ -55,7 +55,7 @@ async function loadHTML() {
 // 取得使用者名稱
 document.addEventListener("DOMContentLoaded", function () {
     const userNameKey = "user_name"; // 儲存使用者名字的欄位
-    let userName = sessionStorage.getItem("UID");
+    let userName = sessionStorage.getItem(userNameKey);
     console.log(`${userName}`)
     if (!userName) {
         window.location.href = '/login';
@@ -63,4 +63,26 @@ document.addEventListener("DOMContentLoaded", function () {
     else {
         loadHTML();
     }
+
+
+    const UID = sessionStorage.getItem("UID"); // 從 sessionStorage 取得 UID
+    const userProfileImg = document.getElementById("user_img");
+
+    if (UID) {
+        const imageUrl = `/static/images/users/${UID}.png`;
+
+        // 發送 HEAD 請求檢查文件是否存在
+        fetch(imageUrl, { method: "HEAD" })
+            .then(response => {
+                if (response.ok) {
+                    userProfileImg.src = imageUrl; // 如果存在，更新圖片位置
+                } else {
+                    console.warn("User image not found, using default.");
+                }
+            })
+            .catch(error => {
+                console.error("Error checking user image:", error);
+            });
+    }
+
 });
