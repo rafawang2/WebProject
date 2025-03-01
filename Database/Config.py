@@ -7,7 +7,8 @@ TABLE_COLS ={
 }
 
 # 連接Database的參數
-SERVER = r"QuanComputer\SQLEXPRESS" # r表示使用原始string，不然會warning
+# SERVER = r"QuanComputer\SQLEXPRESS" # r表示使用原始string，不然會warning # DESKTOP-E7PSRFU\SQLEXPRESS
+SERVER = r"DESKTOP-E7PSRFU\SQLEXPRESS"
 DATABASE = "OnlinePlay"
 USERNAME = "Quan321064"
 PASSWORD = "csie321064"
