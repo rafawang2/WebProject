@@ -1,0 +1,28 @@
+{
+    "ReplayBoards": {
+        "20000000005": {
+            "GID": 2,
+            "player1": "Rafael",
+            "player2": "rafawang2",
+            "uid1": "20250120000001",
+            "uid2": "20250301000001",
+            "state": 2
+        },
+        "20000000006": {
+            "GID": 2,
+            "player1": "Rafael",
+            "player2": "rafawang2",
+            "uid1": "20250120000001",
+            "uid2": "20250301000001",
+            "state": 2
+        },
+        "20000000007": {
+            "GID": 2,
+            "player1": "Rafael",
+            "player2": "rafawang2",
+            "uid1": "20250120000001",
+            "uid2": "20250301000001",
+            "state": -1
+        }
+    }
+}

@@ -1,16 +1,16 @@
 {
     "record": {
         "2": {
-            "total": 1,
+            "total": 0,
             "win": 0,
-            "lose": 1,
+            "lose": 0,
             "draw": 0,
             "unfinish": 0
         },
         "3": {
-            "total": 0,
+            "total": 1,
             "win": 0,
-            "lose": 0,
+            "lose": 1,
             "draw": 0,
             "unfinish": 0
         },
