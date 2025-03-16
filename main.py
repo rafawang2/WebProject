@@ -321,9 +321,6 @@ async def handle_coordinate(request: Request, UID: str):
     return {"board": bot_games[UID].board, "valid_moves": valids, "permission": permission, "winner": bot_games[UID].winner}
         
 if __name__ == "__main__":
-    # IP = "26.136.58.171"    #ncnu wifi
-    # IP = "192.168.0.133"    #澤生居 wifi
-    # IP = "10.99.1.194"
-    # IP = "192.168.2.11"
+   
     IP = "127.0.0.1"
     uvicorn.run("main:app",host=IP,port=8080,reload=True)
